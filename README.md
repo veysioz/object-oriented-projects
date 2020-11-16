@@ -1,9 +1,16 @@
 # CSE3063F20P1_GRP19
-Group 19:
-  150116021 - Mikail Torun | 
-  150116005 - Veysi Öz | 
-  150116025 - Ahmet Hamza Demir | 
-  150116034 - Enes Garip | 
-  150116013 - Muhammet Yasin Tufan | 
-  150115061 - Abbas Göktuğ Yılmaz | 
-  138315014 - Belgin Taştan
+### GROUP 19
+
+__*[Abbas Göktuğ Yılmaz](https://github.com/mehmetalisakalli)-150115061*__
+
+__*[Ahmet Hamza Demir](https://github.com/muhammeddkilicc/)-150116025*__
+
+__*[Belgin Taştan](https://github.com/onurbayraktar)-138315014*__
+
+__*[Enes Garip](https://github.com/onurbayraktar)-150116034*__
+
+__*[Mikail Torun](https://github.com/onurbayraktar)-150116021*__
+
+__*[Muhammet Yasin Tufan](https://github.com/onurbayraktar)-150116013*__
+
+__*[Veysi Öz](https://github.com/onurbayraktar)-150116005*__
