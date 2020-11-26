@@ -4,16 +4,22 @@ import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 
 public class Dataset {
-	private ArrayList<Label> arListLab = new ArrayList<Label>();
-	private ArrayList<Instance> arListIns = new ArrayList<Instance>();
+	public static int datasetID;
+	public static String datasetName;
+	public static int maxNumLabsPerIns;
+	public static ArrayList<Label> arListLab = new ArrayList<Label>();
+	public static ArrayList<Instance> arListIns = new ArrayList<Instance>();
 
 	public Dataset() {
 		JSONObject jsonVal = read();
+		datasetID = Integer.parseInt(jsonVal.get("dataset id").toString());
+		datasetName = jsonVal.get("dataset name").toString();
+		maxNumLabsPerIns = Integer.parseInt(jsonVal.get("maximum number of labels per instance").toString());
 		getLabels(jsonVal, arListLab);
 		getInstances(jsonVal, arListIns);
 	}
 
-	public static JSONObject read() {
+	private JSONObject read() {
 		JSONParser parser = new JSONParser();
 		JSONObject jsonObject = null;
 
@@ -26,7 +32,7 @@ public class Dataset {
 		return jsonObject;
 	}
 
-	public static Instance readJsonFileForInstance() {
+	private Instance readJsonFileForInstance() {
 		JSONParser parser = new JSONParser();
 		JSONObject jsonObject = null;
 
@@ -42,7 +48,7 @@ public class Dataset {
 
 	}
 
-	public static Label readJsonFileForLabel() {
+	private Label readJsonFileForLabel() {
 		JSONParser parser = new JSONParser();
 		JSONObject jsonObject = null;
 
@@ -60,7 +66,7 @@ public class Dataset {
 
 	}
 
-	private static void getLabels(JSONObject jsonObject, ArrayList<Label> arListLab) {
+	private void getLabels(JSONObject jsonObject, ArrayList<Label> arListLab) {
 		JSONArray indexInJSON = (JSONArray) jsonObject.get("class labels");
 
 		Iterator<JSONObject> iteratorForLabelID = indexInJSON.iterator();
@@ -72,7 +78,7 @@ public class Dataset {
 		}
 	}
 
-	private static void getInstances(JSONObject jsonObject, ArrayList<Instance> arListIns) {
+	private void getInstances(JSONObject jsonObject, ArrayList<Instance> arListIns) {
 		JSONArray indexInJSON = (JSONArray) jsonObject.get("instances");
 
 		Iterator<JSONObject> iteratorForinstanceText = indexInJSON.iterator();
@@ -82,21 +88,5 @@ public class Dataset {
 			arListIns.add(new Instance(Integer.parseInt(iteratorForinstanceID.next().get("id").toString()),
 					iteratorForinstanceText.next().get("instance").toString()));
 		}
-	}
-
-	public ArrayList<Label> getArListLab() {
-		return arListLab;
-	}
-
-	public void setArListLab(ArrayList<Label> arListLab) {
-		this.arListLab = arListLab;
-	}
-	
-	public ArrayList<Instance> getArListIns() {
-		return arListIns;
-	}
-
-	public void setArListIns(ArrayList<Instance> arListIns) {
-		this.arListIns = arListIns;
 	}
 }
