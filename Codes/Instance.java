@@ -1,9 +1,12 @@
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Instance {
 	private int instanceID;
 	private String instanceText;
 	private ArrayList<Label> assignedLabels = new ArrayList<Label>();
+	private User user;
+	private Date date;
 	
 	public Instance(int instanceID, String instanceText){
 		this.instanceID = instanceID;
@@ -32,5 +35,21 @@ public class Instance {
 
 	public void setAssignedLabels(ArrayList<Label> assignedLabels) {
 		this.assignedLabels = assignedLabels;
+	}
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 }

@@ -1,45 +1,21 @@
-import org.json.simple.JSONObject;
 
 public class User {
-	JSONObject userArJ = new JSONObject();
-	JSONObject userClassJ= new JSONObject();
-	private int userId;
+	private int userID;
 	private String userName;
 	private String userType;
 
-	public User(){
+	public User(int userID, String userName, String userType){
+		this.userID = userID;
+		this.userName = userName;
+		this.userType = userType;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public void createUSer(int id, String name , String type){
-		this.userArJ.put("id",id)  ;
-		this.userArJ.put("user name",name+id)  ;
-		this.userArJ.put("user type",type);
-		this.userClassJ.put(id,userArJ.clone());
+	public int getUserID() {
+		return userID;
 	}
 	
-	public JSONObject getUserArJ() {
-		return userArJ;
-	}
-	
-	public void setUserArJ(JSONObject userArJ) {
-		this.userArJ = userArJ;
-	}
-	
-	public JSONObject getUserClassJ() {
-		return userClassJ;
-	}
-	
-	public void setUserClassJ(JSONObject userClassJ) {
-		this.userClassJ = userClassJ;
-	}
-	
-	public int getUserId() {
-		return userId;
-	}
-	
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setUserId(int userID) {
+		this.userID = userID;
 	}
 	
 	public String getUserName() {

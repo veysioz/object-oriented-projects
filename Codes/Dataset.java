@@ -24,7 +24,7 @@ public class Dataset {
 		JSONObject jsonObject = null;
 
 		try {
-			Object obj = parser.parse(new FileReader("Input-1.json"));
+			Object obj = parser.parse(new FileReader("Input-2.json"));
 			jsonObject = (JSONObject) obj;
 		} catch (Exception e) {
 			System.out.println(e);
@@ -32,12 +32,13 @@ public class Dataset {
 		return jsonObject;
 	}
 
+	@SuppressWarnings("unused")
 	private Instance readJsonFileForInstance() {
 		JSONParser parser = new JSONParser();
 		JSONObject jsonObject = null;
 
 		try {
-			Object obj = parser.parse(new FileReader("Input-1.json"));
+			Object obj = parser.parse(new FileReader("Input-2.json"));
 			jsonObject = (JSONObject) obj;
 			return null;
 
@@ -48,12 +49,13 @@ public class Dataset {
 
 	}
 
+	@SuppressWarnings("unused")
 	private Label readJsonFileForLabel() {
 		JSONParser parser = new JSONParser();
 		JSONObject jsonObject = null;
 
 		try {
-			Object obj = parser.parse(new FileReader("Input-1.json"));
+			Object obj = parser.parse(new FileReader("Input-2.json"));
 
 			jsonObject = (JSONObject) obj;
 
@@ -66,6 +68,7 @@ public class Dataset {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private void getLabels(JSONObject jsonObject, ArrayList<Label> arListLab) {
 		JSONArray indexInJSON = (JSONArray) jsonObject.get("class labels");
 
@@ -78,6 +81,7 @@ public class Dataset {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void getInstances(JSONObject jsonObject, ArrayList<Instance> arListIns) {
 		JSONArray indexInJSON = (JSONArray) jsonObject.get("instances");
 
