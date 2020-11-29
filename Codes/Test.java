@@ -10,30 +10,35 @@ public class Test {
 	public static void main(String[] args) {
 		Dataset dataset = new Dataset();
 		Scanner scanner = new Scanner(System.in);
-		int input = 0, exitNum, userID;
+		int input = 0, userID;
+		boolean start = true;
 
 		System.out.println("Welcome to Data Labelling System!");
 		while (true) {
 			if (Labelling.insNum == Dataset.arListIns.size() - 1)
 				break;
-
-			if (input == 0) {
+			else {
 				System.out.println("\n" + Dataset.arListIns.get(Labelling.insNum + 1).getInstanceText());
-				System.out.print("   1 => Random Type\n   2 => Exit\n Your Input: ");
-				exitNum = 2;
-			} else {
-				System.out.println("\n" + Dataset.arListIns.get(Labelling.insNum + 1).getInstanceText());
-				System.out.print(
-						"   1 => Random Type(New User)\n   2 => Random Type(Same User)\n   3 => Ramdom Type(Registered User)\n   4 => Exit\n Your Input: ");
-				exitNum = 4;
+				
+				if(start) {
+					System.out.print("   1 => Random Type\n Your Input: ");
+					input = scanner.nextInt();
+					while(input != 1) {
+						System.out.print(" Enter a valid choice: ");
+						input = scanner.nextInt();
+					}
+					start = false;
+				} else {
+					System.out.print("   1 => Random Type(New User)\n   2 => Random Type(Same User)\n   3 => Ramdom Type(Registered User)\n Your Input: ");
+					input = scanner.nextInt();
+					while(input < 1 || input > 3) {
+						System.out.print(" Enter a valid choice: ");
+						input = scanner.nextInt();
+					}
+				}
 			}
 
-			input = scanner.nextInt();
-
-			if (input == exitNum) {
-				System.out.print("\nYou are logged out.");
-				System.exit(0);
-			} else if (input == 1) {
+			if (input == 1) {
 				User user = new User(users.size() + 1, "RandomLabelling" + (users.size() + 1), "RandomBot");
 				new RandomLabelling(user, new Date());
 				users.add(user);
@@ -41,11 +46,11 @@ public class Test {
 				new RandomLabelling(Dataset.arListIns.get(Labelling.insNum).getUser(), new Date());
 			} else if (input == 3) {
 				System.out.print(" User ID: ");
-				userID = scanner.nextInt();
-				new RandomLabelling(users.get(userID - 1), new Date());
+					userID = scanner.nextInt();
+					new RandomLabelling(users.get(userID - 1), new Date());
 			}
 		}
-
+		
 		printOutput();
 	}
 
