@@ -46,8 +46,12 @@ public class Test {
 				new RandomLabelling(Dataset.arListIns.get(Labelling.insNum).getUser(), new Date());
 			} else if (input == 3) {
 				System.out.print(" User ID: ");
+				userID = scanner.nextInt();
+				while(userID > users.size()) {
+					System.out.print(" Enter a valid user ID: ");
 					userID = scanner.nextInt();
-					new RandomLabelling(users.get(userID - 1), new Date());
+				}
+				new RandomLabelling(users.get(userID - 1), new Date());
 			}
 		}
 		
