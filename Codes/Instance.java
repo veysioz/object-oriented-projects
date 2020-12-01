@@ -1,7 +1,9 @@
 import java.util.ArrayList;
 import java.util.Date;
-
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 public class Instance {
+	private final Logger logger = LogManager.getLogger();
 	private int instanceID;
 	private String instanceText;
 	private ArrayList<Label> assignedLabels = new ArrayList<Label>();
@@ -11,6 +13,7 @@ public class Instance {
 	public Instance(int instanceID, String instanceText){
 		this.instanceID = instanceID;
 		this.instanceText = instanceText;
+		logger.info("The instance \" {}-{} \" is created.",this::getInstanceID,this::getInstanceText);
 	}
 
 	public int getInstanceID() {
