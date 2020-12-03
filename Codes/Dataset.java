@@ -10,7 +10,7 @@ public class Dataset {
 	public static int maxNumLabsPerIns;
 	public static ArrayList<Label> arListLab = new ArrayList<Label>();
 	public static ArrayList<Instance> arListIns = new ArrayList<Instance>();
-	private final Logger logger = LogManager.getLogger();
+	private final Logger LOGGER = LogManager.getLogger();
 	public Dataset() {
 		JSONObject jsonVal = read();
 		datasetID = Integer.parseInt(jsonVal.get("dataset id").toString());
@@ -18,7 +18,7 @@ public class Dataset {
 		maxNumLabsPerIns = Integer.parseInt(jsonVal.get("maximum number of labels per instance").toString());
 		getLabels(jsonVal, arListLab);
 		getInstances(jsonVal, arListIns);
-		logger.info("Dataset \" {}-{} \" created\n",datasetID,datasetName);
+		LOGGER.info("Dataset \" {}-{} \" created\n",datasetID,datasetName);
 	}
 
 	private JSONObject read() {

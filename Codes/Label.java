@@ -4,11 +4,11 @@ import org.apache.logging.log4j.LogManager;
 public class Label {
 	private int labelID;
 	private String labelText;
-	private final Logger logger = LogManager.getLogger();
+	private final Logger LOGGER = LogManager.getLogger();
 	public Label(int labelID, String labelText){
 		this.labelID = labelID;
 		this.labelText = labelText;
-		logger.info("The label {}-{} created.",this::getLabelID,this::getLabelText);
+		LOGGER.info("The label {}-{} created.",this::getLabelID,this::getLabelText);
 	}
 
 	public int getLabelID() {
