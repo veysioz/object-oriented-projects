@@ -2,15 +2,14 @@ import java.io.*;
 import java.util.*;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+
 public class Dataset {
-	public static int datasetID;
-	public static String datasetName;
-	public static int maxNumLabsPerIns;
-	public static ArrayList<Label> arListLab = new ArrayList<Label>();
-	public static ArrayList<Instance> arListIns = new ArrayList<Instance>();
-	private final Logger LOGGER = LogManager.getLogger();
+	private int datasetID;
+	private String datasetName;
+	private int maxNumLabsPerIns;
+	private ArrayList<Label> arListLab = new ArrayList<Label>();
+	private ArrayList<Instance> arListIns = new ArrayList<Instance>();
+	
 	public Dataset() {
 		JSONObject jsonVal = read();
 		datasetID = Integer.parseInt(jsonVal.get("dataset id").toString());
@@ -18,7 +17,6 @@ public class Dataset {
 		maxNumLabsPerIns = Integer.parseInt(jsonVal.get("maximum number of labels per instance").toString());
 		getLabels(jsonVal, arListLab);
 		getInstances(jsonVal, arListIns);
-		LOGGER.info("Dataset \" {}-{} \" created\n",datasetID,datasetName);
 	}
 
 	private JSONObject read() {
@@ -26,7 +24,7 @@ public class Dataset {
 		JSONObject jsonObject = null;
 
 		try {
-			Object obj = parser.parse(new FileReader("Input-2.json"));
+			Object obj = parser.parse(new FileReader("Input-1.json"));
 			jsonObject = (JSONObject) obj;
 		} catch (Exception e) {
 			System.out.println(e);
@@ -40,7 +38,7 @@ public class Dataset {
 		JSONObject jsonObject = null;
 
 		try {
-			Object obj = parser.parse(new FileReader("Input-2.json"));
+			Object obj = parser.parse(new FileReader("Input-1.json"));
 			jsonObject = (JSONObject) obj;
 			return null;
 
@@ -57,7 +55,7 @@ public class Dataset {
 		JSONObject jsonObject = null;
 
 		try {
-			Object obj = parser.parse(new FileReader("Input-2.json"));
+			Object obj = parser.parse(new FileReader("Input-1.json"));
 
 			jsonObject = (JSONObject) obj;
 
@@ -94,5 +92,45 @@ public class Dataset {
 			arListIns.add(new Instance(Integer.parseInt(iteratorForinstanceID.next().get("id").toString()),
 					iteratorForinstanceText.next().get("instance").toString()));
 		}
+	}
+	
+	public int getDatasetID() {
+		return datasetID;
+	}
+	
+	public void setDatasetID(int datasetID) {
+		this.datasetID = datasetID;
+	}
+	
+	public String getDatasetName() {
+		return datasetName;
+	}
+	
+	public void setDatasetName(String datasetName) {
+		this.datasetName = datasetName;
+	}
+	
+	public int getMaxNumLabsPerIns() {
+		return maxNumLabsPerIns;
+	}
+	
+	public void setMaxNumLabsPerIns(int maxNumLabsPerIns) {
+		this.maxNumLabsPerIns = maxNumLabsPerIns;
+	}
+	
+	public ArrayList<Label> getArListLab() {
+		return arListLab;
+	}
+	
+	public void setArListLab(ArrayList<Label> arListLab) {
+		this.arListLab = arListLab;
+	}
+	
+	public ArrayList<Instance> getArListIns() {
+		return arListIns;
+	}
+	
+	public void setArListIns(ArrayList<Instance> arListIns) {
+		this.arListIns = arListIns;
 	}
 }

@@ -3,22 +3,21 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Test {
-	static ArrayList<User> users = new ArrayList<User>();
-	static FileWriter fileWrite;
 
-	@SuppressWarnings({ "unused", "resource" })
+	@SuppressWarnings({ "resource" })
 	public static void main(String[] args) {
+		ArrayList<User> users = new ArrayList<User>();
 		Dataset dataset = new Dataset();
 		Scanner scanner = new Scanner(System.in);
-		int input = 0, userID;
+		int input = 0, userID, insNum = -1;
 		boolean start = true;
 
 		System.out.println("Welcome to Data Labelling System!");
 		while (true) {
-			if (Labelling.insNum == Dataset.arListIns.size() - 1)
+			if (insNum == dataset.getArListIns().size() - 1)
 				break;
 			else {
-				System.out.println("\n" + Dataset.arListIns.get(Labelling.insNum + 1).getInstanceText());
+				System.out.println("\n" + dataset.getArListIns().get(insNum + 1).getInstanceText());
 				
 				if(start) {
 					System.out.print("   1 => Random Type\n Your Input: ");
@@ -40,10 +39,10 @@ public class Test {
 
 			if (input == 1) {
 				User user = new User(users.size() + 1, "RandomLabelling" + (users.size() + 1), "RandomBot");
-				new RandomLabelling(user, new Date());
+				new RandomLabelling(user, new Date(), dataset, ++insNum);
 				users.add(user);
 			} else if (input == 2) {
-				new RandomLabelling(Dataset.arListIns.get(Labelling.insNum).getUser(), new Date());
+				new RandomLabelling(dataset.getArListIns().get(insNum).getUser(), new Date(), dataset, ++insNum);
 			} else if (input == 3) {
 				System.out.print(" User ID: ");
 				userID = scanner.nextInt();
@@ -51,32 +50,32 @@ public class Test {
 					System.out.print(" Enter a valid user ID: ");
 					userID = scanner.nextInt();
 				}
-				new RandomLabelling(users.get(userID - 1), new Date());
+				new RandomLabelling(users.get(userID - 1), new Date(), dataset, ++insNum);
 			}
 		}
 		
-		printOutput();
+		printOutput(dataset, users);
 	}
 
-	static SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss");
-
-	public static void printOutput() {
-		System.out.println("\nDataset ID: " + Dataset.datasetID);
-		System.out.println("Dataset Name: " + Dataset.datasetName);
-		System.out.println("Maximum Number of Labels per Instance: " + Dataset.maxNumLabsPerIns);
+	public static void printOutput(Dataset dataset, ArrayList<User> users) {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss");
+		
+		System.out.println("\nDataset ID: " + dataset.getDatasetID());
+		System.out.println("Dataset Name: " + dataset.getDatasetName());
+		System.out.println("Maximum Number of Labels per Instance: " + dataset.getMaxNumLabsPerIns());
 		System.out.println("Class Labels:");
-		Dataset.arListLab.forEach(
+		dataset.getArListLab().forEach(
 				(n) -> System.out.println("\tLabel ID: " + n.getLabelID() + " | Label Text: " + n.getLabelText()));
 		System.out.println("Instances:");
-		Dataset.arListIns.forEach((n) -> System.out
+		dataset.getArListIns().forEach((n) -> System.out
 				.println("\tInstance ID: " + n.getInstanceID() + " | Instance Text: " + n.getInstanceText()));
 		System.out.print("Class Label Assignments:\n\t");
-		for (int i = 0; i < Dataset.arListIns.size(); i++) {
-			System.out.print("Instance ID: " + Dataset.arListIns.get(i).getInstanceID() + " | Class Label IDs: ");
-			Dataset.arListIns.get(i).getAssignedLabels().forEach((n) -> System.out.print(n.getLabelID() + " "));
-			System.out.print("| User ID: " + Dataset.arListIns.get(i).getUser().getUserID());
-			System.out.println(" | Date & Time: " + formatter.format(Dataset.arListIns.get(i).getDate()));
-			if (i != Dataset.arListIns.size() - 1)
+		for (int i = 0; i < dataset.getArListIns().size(); i++) {
+			System.out.print("Instance ID: " + dataset.getArListIns().get(i).getInstanceID() + " | Class Label IDs: ");
+			dataset.getArListIns().get(i).getAssignedLabels().forEach((n) -> System.out.print(n.getLabelID() + " "));
+			System.out.print("| User ID: " + dataset.getArListIns().get(i).getUser().getUserID());
+			System.out.println(" | Date & Time: " + formatter.format(dataset.getArListIns().get(i).getDate()));
+			if (i != dataset.getArListIns().size() - 1)
 				System.out.print("\t");
 		}
 		System.out.print("Users:\n");
@@ -85,34 +84,37 @@ public class Test {
 					+ " | User Type: " + users.get(i).getUserType());
 		}
 		try {
-			writeJsonToFile();
+			writeJsonToFile(dataset, users, formatter);
 		} catch (IOException e) {
 
 			e.printStackTrace();
 		}
 	}
 
-	static int k, counter;
-	private static void writeJsonToFile() throws IOException {
+	static int counter, k;
+	@SuppressWarnings("resource")
+	private static void writeJsonToFile(Dataset dataset, ArrayList<User> users, SimpleDateFormat formatter) throws IOException {
 
 		File file = new File("Output.json");
+		FileWriter fileWrite;
+		
 		file.createNewFile();
 
 		fileWrite = new FileWriter(file);
 
-		fileWrite.write("{\n\"Dataset ID\": " + Dataset.datasetID + ",\n");
+		fileWrite.write("{\n\"Dataset ID\": " + dataset.getDatasetID() + ",\n");
 
-		fileWrite.write("\"Dataset Name\": " + "\"" + Dataset.datasetName + "\"" + ",");
+		fileWrite.write("\"Dataset Name\": " + "\"" + dataset.getDatasetName() + "\"" + ",");
 		fileWrite.flush();
-		fileWrite.write("\"Maximum Number of Labels per Instance\": " + Dataset.maxNumLabsPerIns + ",");
+		fileWrite.write("\"Maximum Number of Labels per Instance\": " + dataset.getMaxNumLabsPerIns() + ",");
 		fileWrite.flush();
 
 		fileWrite.write("\n\"Class Labels\":[\n");
 		fileWrite.flush();
 		counter = 1;
-		Dataset.arListLab.forEach((n) -> {
+		dataset.getArListLab().forEach((n) -> {
 			try {
-				if (Dataset.arListLab.size() != counter) {
+				if (dataset.getArListLab().size() != counter) {
 					fileWrite.write("{\"Label ID\": " + n.getLabelID() + ", \"Label Text\": " + "\"" + n.getLabelText()
 							+ "\"},\n");
 					fileWrite.flush();
@@ -134,9 +136,9 @@ public class Test {
 		fileWrite.write("\n\"Instances\":[\n");
 		fileWrite.flush();
 		counter = 1;
-		Dataset.arListIns.forEach((n) -> {
+		dataset.getArListIns().forEach((n) -> {
 			try {
-				if (Dataset.arListIns.size() != counter) {
+				if (dataset.getArListIns().size() != counter) {
 					fileWrite.write("{\"Instance ID\":" + n.getInstanceID() + ", \"Instance Text\": \""
 							+ n.getInstanceText() + "\"},\n");
 					fileWrite.flush();
@@ -155,17 +157,16 @@ public class Test {
 		fileWrite.write("\n\"Class Label Assignments\":[\n");
 		fileWrite.flush();
 
-		for (int i = 0; i < Dataset.arListIns.size(); i++) {
+		for (int i = 0; i < dataset.getArListIns().size(); i++) {
 			fileWrite.write(
-					"{\"Instance ID\": " + Dataset.arListIns.get(i).getInstanceID() + ", \"Class Label IDs\": [");
+					"{\"Instance ID\": " + dataset.getArListIns().get(i).getInstanceID() + ", \"Class Label IDs\": [");
 			fileWrite.flush();
 			counter = 1;
 			k = i;
-			Dataset.arListIns.get(i).getAssignedLabels().forEach((n) -> {
+			dataset.getArListIns().get(i).getAssignedLabels().forEach((n) -> {
 
 				try {
-
-					if (Dataset.arListIns.get(k).getAssignedLabels().size() != counter) {
+					if (dataset.getArListIns().get(k).getAssignedLabels().size() != counter) {
 						fileWrite.write(n.getLabelID() + " ,");
 						fileWrite.flush();
 
@@ -179,15 +180,15 @@ public class Test {
 					e.printStackTrace();
 				}
 			});
-			fileWrite.write("\"User ID\": " + Dataset.arListIns.get(i).getUser().getUserID() + ", ");
+			fileWrite.write("\"User ID\": " + dataset.getArListIns().get(i).getUser().getUserID() + ", ");
 			fileWrite.flush();
-			if (i != Dataset.arListIns.size() - 1) {
+			if (i != dataset.getArListIns().size() - 1) {
 				fileWrite
-						.write("\"Date & Time\": \"" + formatter.format(Dataset.arListIns.get(i).getDate()) + "\"},\n");
+						.write("\"Date & Time\": \"" + formatter.format(dataset.getArListIns().get(i).getDate()) + "\"},\n");
 				fileWrite.flush();
 			} else {
 				fileWrite.write(
-						"\"Date & Time\": \"" + formatter.format(Dataset.arListIns.get(i).getDate()) + "\"}\n],");
+						"\"Date & Time\": \"" + formatter.format(dataset.getArListIns().get(i).getDate()) + "\"}\n],");
 				fileWrite.flush();
 			}
 		}
