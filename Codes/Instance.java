@@ -4,9 +4,8 @@ import java.util.Date;
 public class Instance {
 	private int instanceID;
 	private String instanceText;
-	private ArrayList<Label> assignedLabels = new ArrayList<Label>();
-	private User user;
-	private Date date;
+	private ArrayList<Label> assignedLabs = new ArrayList<Label>();
+	private Date assignedDate;
 	
 	public Instance(int instanceID, String instanceText){
 		this.instanceID = instanceID;
@@ -29,27 +28,15 @@ public class Instance {
 		this.instanceText = instanceText;
 	}
 	
-	public ArrayList<Label> getAssignedLabels() {
-		return assignedLabels;
-	}
-
-	public void setAssignedLabels(ArrayList<Label> assignedLabels) {
-		this.assignedLabels = assignedLabels;
+	public ArrayList<Label> getAssignedLabs() {
+		return assignedLabs;
 	}
 	
-	public User getUser() {
-		return user;
+	public Date getAssignedDate() {
+		return assignedDate;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
-	}
-	
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
+	public void setAssignedDate(Date assignedDate) {
+		this.assignedDate = assignedDate;
 	}
 }

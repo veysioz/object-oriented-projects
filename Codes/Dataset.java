@@ -10,8 +10,8 @@ public class Dataset {
 	private ArrayList<Label> arListLab = new ArrayList<Label>();
 	private ArrayList<Instance> arListIns = new ArrayList<Instance>();
 	
-	public Dataset() {
-		JSONObject jsonVal = read();
+	public Dataset(String path) {
+		JSONObject jsonVal = getJSONFile(path);
 		datasetID = Integer.parseInt(jsonVal.get("dataset id").toString());
 		datasetName = jsonVal.get("dataset name").toString();
 		maxNumLabsPerIns = Integer.parseInt(jsonVal.get("maximum number of labels per instance").toString());
@@ -19,55 +19,19 @@ public class Dataset {
 		getInstances(jsonVal, arListIns);
 	}
 
-	private JSONObject read() {
+	private JSONObject getJSONFile(String path) {
 		JSONParser parser = new JSONParser();
 		JSONObject jsonObject = null;
 
 		try {
-			Object obj = parser.parse(new FileReader("Input-1.json"));
+			Object obj = parser.parse(new FileReader(path));
 			jsonObject = (JSONObject) obj;
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 		return jsonObject;
 	}
-
-	@SuppressWarnings("unused")
-	private Instance readJsonFileForInstance() {
-		JSONParser parser = new JSONParser();
-		JSONObject jsonObject = null;
-
-		try {
-			Object obj = parser.parse(new FileReader("Input-1.json"));
-			jsonObject = (JSONObject) obj;
-			return null;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-
-	}
-
-	@SuppressWarnings("unused")
-	private Label readJsonFileForLabel() {
-		JSONParser parser = new JSONParser();
-		JSONObject jsonObject = null;
-
-		try {
-			Object obj = parser.parse(new FileReader("Input-1.json"));
-
-			jsonObject = (JSONObject) obj;
-
-			return null;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-
-	}
-
+	
 	@SuppressWarnings("unchecked")
 	private void getLabels(JSONObject jsonObject, ArrayList<Label> arListLab) {
 		JSONArray indexInJSON = (JSONArray) jsonObject.get("class labels");
@@ -122,15 +86,7 @@ public class Dataset {
 		return arListLab;
 	}
 	
-	public void setArListLab(ArrayList<Label> arListLab) {
-		this.arListLab = arListLab;
-	}
-	
 	public ArrayList<Instance> getArListIns() {
 		return arListIns;
-	}
-	
-	public void setArListIns(ArrayList<Instance> arListIns) {
-		this.arListIns = arListIns;
 	}
 }

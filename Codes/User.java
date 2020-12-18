@@ -1,8 +1,10 @@
+import java.util.ArrayList;
 
 public class User {
 	private int userID;
 	private String userName;
 	private String userType;
+	private ArrayList<Instance> assignedIns = new ArrayList<Instance>();
 	
 	public User(int userID, String userName, String userType){
 		this.userID = userID;
@@ -32,5 +34,9 @@ public class User {
 	
 	public void setUserType(String userType) {
 		this.userType = userType;
+	}
+	
+	public ArrayList<Instance> getAssignedIns() {
+		return assignedIns;
 	}
 }

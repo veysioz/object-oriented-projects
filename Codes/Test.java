@@ -1,97 +1,46 @@
-import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
 
 public class Test {
-
-	@SuppressWarnings({ "resource" })
+	
 	public static void main(String[] args) {
-		ArrayList<User> users = new ArrayList<User>();
-		Dataset dataset = new Dataset();
-		Scanner scanner = new Scanner(System.in);
-		int input = 0, userID, insNum = -1;
-		boolean start = true;
-
-		System.out.println("Welcome to Data Labelling System!");
-		while (true) {
-			if (insNum == dataset.getArListIns().size() - 1)
-				break;
-			else {
-				System.out.println("\n" + dataset.getArListIns().get(insNum + 1).getInstanceText());
-				
-				if(start) {
-					System.out.print("   1 => Random Type\n Your Input: ");
-					input = scanner.nextInt();
-					while(input != 1) {
-						System.out.print(" Enter a valid choice: ");
-						input = scanner.nextInt();
-					}
-					start = false;
-				} else {
-					System.out.print("   1 => Random Type(New User)\n   2 => Random Type(Same User)\n   3 => Ramdom Type(Registered User)\n Your Input: ");
-					input = scanner.nextInt();
-					while(input < 1 || input > 3) {
-						System.out.print(" Enter a valid choice: ");
-						input = scanner.nextInt();
-					}
-				}
-			}
-
-			if (input == 1) {
-				User user = new User(users.size() + 1, "RandomLabelling" + (users.size() + 1), "RandomBot");
-				new RandomLabelling(user, new Date(), dataset, ++insNum);
-				users.add(user);
-			} else if (input == 2) {
-				new RandomLabelling(dataset.getArListIns().get(insNum).getUser(), new Date(), dataset, ++insNum);
-			} else if (input == 3) {
-				System.out.print(" User ID: ");
-				userID = scanner.nextInt();
-				while(userID > users.size()) {
-					System.out.print(" Enter a valid user ID: ");
-					userID = scanner.nextInt();
-				}
-				new RandomLabelling(users.get(userID - 1), new Date(), dataset, ++insNum);
-			}
-		}
-		
-		printOutput(dataset, users);
-	}
-
-	public static void printOutput(Dataset dataset, ArrayList<User> users) {
+		Config config = new Config();
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss");
-		
-		System.out.println("\nDataset ID: " + dataset.getDatasetID());
-		System.out.println("Dataset Name: " + dataset.getDatasetName());
-		System.out.println("Maximum Number of Labels per Instance: " + dataset.getMaxNumLabsPerIns());
-		System.out.println("Class Labels:");
-		dataset.getArListLab().forEach(
-				(n) -> System.out.println("\tLabel ID: " + n.getLabelID() + " | Label Text: " + n.getLabelText()));
-		System.out.println("Instances:");
-		dataset.getArListIns().forEach((n) -> System.out
-				.println("\tInstance ID: " + n.getInstanceID() + " | Instance Text: " + n.getInstanceText()));
-		System.out.print("Class Label Assignments:\n\t");
-		for (int i = 0; i < dataset.getArListIns().size(); i++) {
-			System.out.print("Instance ID: " + dataset.getArListIns().get(i).getInstanceID() + " | Class Label IDs: ");
-			dataset.getArListIns().get(i).getAssignedLabels().forEach((n) -> System.out.print(n.getLabelID() + " "));
-			System.out.print("| User ID: " + dataset.getArListIns().get(i).getUser().getUserID());
-			System.out.println(" | Date & Time: " + formatter.format(dataset.getArListIns().get(i).getDate()));
-			if (i != dataset.getArListIns().size() - 1)
-				System.out.print("\t");
-		}
-		System.out.print("Users:\n");
-		for (int i = 0; i < users.size(); i++) {
-			System.out.println("\tUser ID: " + users.get(i).getUserID() + " | Username: " + users.get(i).getUserName()
-					+ " | User Type: " + users.get(i).getUserType());
-		}
-		try {
-			writeJsonToFile(dataset, users, formatter);
-		} catch (IOException e) {
 
-			e.printStackTrace();
-		}
+		config.getDatasets().forEach((n) -> {
+			System.out.println("Dataset ID: " + n.getDatasetID());
+			System.out.println("Dataset Name: " + n.getDatasetName());
+			System.out.println("Maximum Number of Labels per Instance: " + n.getMaxNumLabsPerIns());
+			System.out.println("Class Labels:");
+			n.getArListLab().forEach((m) -> System.out.println("\tLabel ID: " + m.getLabelID() + " | Label Text: " + m.getLabelText()));
+			System.out.println("Instances:");
+			n.getArListIns().forEach((m) -> System.out.println("\tInstance ID: " + m.getInstanceID() + " | Instance Text: " + m.getInstanceText()));
+			System.out.print("Users:\n");
+			config.getUsers().forEach((m) -> {
+				System.out.println("\tUser ID: " + m.getUserID() + " | Username: " + m.getUserName() + " | User Type: " + m.getUserType());
+			});
+			System.out.println();
+		});
+		
+		System.out.println("Class Label Assignments:");
+		config.getDatasets().forEach((n) -> {
+			n.getArListIns().forEach((m) -> {
+				config.getUsers().forEach((k) -> {
+				    try {
+				    	Date date = new Date();
+				    	System.out.print("\t Dataset ID: " + n.getDatasetID() + " | Instance ID: " + m.getInstanceID() + " | Class Label IDs: ");
+				    	new RandomLabelling(k, new Instance(m.getInstanceID(), m.getInstanceText()), date, n);
+				    	System.out.println(" | User ID: " + k.getUserID() + " | Date & Time: " + formatter.format(date));
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				});
+			});
+		});
 	}
 
-	static int counter, k;
+	/*static int counter, k;
 	@SuppressWarnings("resource")
 	private static void writeJsonToFile(Dataset dataset, ArrayList<User> users, SimpleDateFormat formatter) throws IOException {
 
@@ -208,5 +157,5 @@ public class Test {
 			}
 
 		}
-	}
+	}*/
 }
