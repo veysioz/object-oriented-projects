@@ -2,12 +2,12 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class RandomLabelling {
-	int consistency = 0;
+	Consistency consistency = new Consistency(0);
 	
 	@SuppressWarnings("unchecked")
 	public RandomLabelling(User user, Instance ins, Date assignedDate, Dataset dataset, boolean ccp) {
 		ArrayList<Label> temp = (ArrayList<Label>)dataset.getArListLab().clone();
-		int rand1 = (int)(Math.random() * dataset.getMaxNumLabsPerIns()) + 1, rand2;
+		int rand1 = (int)(Math.random() * dataset.getMaxNumLabsPerIns().getNumber()) + 1, rand2;
 		
 		ArrayList<Label> temp1 = new ArrayList<Label>();
 		for(int i = 0; i < rand1; i++) {
@@ -17,7 +17,7 @@ public class RandomLabelling {
 		}
 		
 		if(ccp)
-			consistency = calculateConsistency(ins.getAssignedLabs(), temp1);
+			consistency.setPercentage(calculateConsistency(ins.getAssignedLabs(), temp1));
 		
 		ins.setAssignedDate(assignedDate);
 		ins.setAssignedLabs(temp1);
@@ -25,14 +25,14 @@ public class RandomLabelling {
 		if(!ccp)
 			user.getAssignedIns().add(ins);
 		
-		ins.getAssignedLabs().forEach((n) -> System.out.print(n.getLabelID() + " "));
+		ins.getAssignedLabs().forEach((n) -> System.out.print(n.getLabelID().getID() + " "));
 	}
 	
-	public int getConsistency() {
+	public Consistency getConsistency() {
 		return consistency;
 	}
 	
-	public void setConsistency(int consistency) {
+	public void setConsistency(Consistency consistency) {
 		this.consistency = consistency;
 	}
 	

@@ -2,31 +2,31 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Instance {
-	private int instanceID;
-	private String instanceText;
+	private ID instanceID;
+	private Text instanceText;
 	private ArrayList<Label> assignedLabs = new ArrayList<Label>();
 	private Date assignedDate;
-	private int datasetID;
+	private ID datasetID;
 	
-	public Instance(int instanceID, String instanceText, int datasetID){
+	public Instance(ID instanceID, Text instanceText, ID datasetID){
 		this.instanceID = instanceID;
 		this.instanceText = instanceText;
 		this.datasetID = datasetID;
 	}
 
-	public int getInstanceID() {
+	public ID getInstanceID() {
 		return instanceID;
 	}
 
-	public void setInstanceID(int instanceID) {
+	public void setInstanceID(ID instanceID) {
 		this.instanceID = instanceID;
 	}
 
-	public String getInstanceText() {
+	public Text getInstanceText() {
 		return instanceText;
 	}
 
-	public void setInstanceText(String instanceText) {
+	public void setInstanceText(Text instanceText) {
 		this.instanceText = instanceText;
 	}
 	
@@ -46,11 +46,11 @@ public class Instance {
 		this.assignedDate = assignedDate;
 	}
 	
-	public int getDatasetID() {
+	public ID getDatasetID() {
 		return datasetID;
 	}
 	
-	public void setDataset(int datasetID) {
+	public void setDataset(ID datasetID) {
 		this.datasetID = datasetID;
 	}
 }

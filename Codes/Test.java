@@ -8,16 +8,16 @@ public class Test {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss");
 
 		config.getDatasets().forEach((n) -> {
-			System.out.println("Dataset ID: " + n.getDatasetID());
-			System.out.println("Dataset Name: " + n.getDatasetName());
-			System.out.println("Maximum Number of Labels per Instance: " + n.getMaxNumLabsPerIns());
+			System.out.println("Dataset ID: " + n.getDatasetID().getID());
+			System.out.println("Dataset Name: " + n.getDatasetName().getText());
+			System.out.println("Maximum Number of Labels per Instance: " + n.getMaxNumLabsPerIns().getNumber());
 			System.out.println("Class Labels:");
-			n.getArListLab().forEach((m) -> System.out.println("\tLabel ID: " + m.getLabelID() + " | Label Text: " + m.getLabelText()));
+			n.getArListLab().forEach((m) -> System.out.println("\tLabel ID: " + m.getLabelID().getID() + " | Label Text: " + m.getLabelText().getText()));
 			System.out.println("Instances:");
-			n.getArListIns().forEach((m) -> System.out.println("\tInstance ID: " + m.getInstanceID() + " | Instance Text: " + m.getInstanceText()));
+			n.getArListIns().forEach((m) -> System.out.println("\tInstance ID: " + m.getInstanceID().getID() + " | Instance Text: " + m.getInstanceText().getText()));
 			System.out.print("Users:\n");
 			config.getUsers().forEach((m) -> {
-				System.out.println("\tUser ID: " + m.getUserID() + " | Username: " + m.getUserName() + " | User Type: " + m.getUserType());
+				System.out.println("\tUser ID: " + m.getUserID().getID() + " | Username: " + m.getUserName().getText() + " | User Type: " + m.getUserType().getText());
 			});
 			System.out.println();
 		});
@@ -30,15 +30,15 @@ public class Test {
 				    	Date date = new Date();
 				    	if(ccpPercent(config.getCpp()) && !k.getAssignedIns().isEmpty()) {
 				    		Instance ins = k.getAssignedIns().get((int)(Math.random() * k.getAssignedIns().size()));
-				    		System.out.print("\t Dataset ID: " + ins.getDatasetID() + " | Instance ID: " + ins.getInstanceID() + " | Class Label IDs: ");
-				    		RandomLabelling randLab = new RandomLabelling(k, ins, date, config.getDatasets().get(ins.getDatasetID()-1), true);
-				    		System.out.print(" | User ID: " + k.getUserID() + " | Date & Time: " + formatter.format(date));
-				    		System.out.println(" | Consistency: " + randLab.getConsistency() + " %");
+				    		System.out.print("\t Dataset ID: " + ins.getDatasetID().getID() + " | Instance ID: " + ins.getInstanceID().getID() + " | Class Label IDs: ");
+				    		RandomLabelling randLab = new RandomLabelling(k, ins, date, config.getDatasets().get(ins.getDatasetID().getID()-1), true);
+				    		System.out.print(" | User ID: " + k.getUserID().getID() + " | Date & Time: " + formatter.format(date));
+				    		System.out.println(" | Consistency: " + randLab.getConsistency().getPercentage() + " %");
 				    	}
 				    	else {
-				    		System.out.print("\t Dataset ID: " + n.getDatasetID() + " | Instance ID: " + m.getInstanceID() + " | Class Label IDs: ");
+				    		System.out.print("\t Dataset ID: " + n.getDatasetID().getID() + " | Instance ID: " + m.getInstanceID().getID() + " | Class Label IDs: ");
 				    		new RandomLabelling(k, new Instance(m.getInstanceID(), m.getInstanceText(), n.getDatasetID()), date, n, false);
-				    		System.out.println(" | User ID: " + k.getUserID() + " | Date & Time: " + formatter.format(date));
+				    		System.out.println(" | User ID: " + k.getUserID().getID() + " | Date & Time: " + formatter.format(date));
 				    	}
 				    	
 				    	Thread.sleep(500);
@@ -50,11 +50,11 @@ public class Test {
 		});
 	}
 	
-	public static boolean ccpPercent(double ccp) {
+	public static boolean ccpPercent(ConsCheckProb ccp) {
 		int rand = (int)(Math.random() * 100) + 1;
-		ccp = (int)(ccp * 100);
+		ccp = new ConsCheckProb((int)(ccp.getCCP() * 100));
 		
-		if(rand <= ccp && rand >= 0)
+		if(rand <= ccp.getCCP() && rand >= 0)
 			return true;
 		else
 			return false;

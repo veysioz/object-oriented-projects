@@ -4,17 +4,17 @@ import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 
 public class Dataset {
-	private int datasetID;
-	private String datasetName;
-	private int maxNumLabsPerIns;
+	private ID datasetID;
+	private Text datasetName;
+	private MaxNumLabsPerIns maxNumLabsPerIns;
 	private ArrayList<Label> arListLab = new ArrayList<Label>();
 	private ArrayList<Instance> arListIns = new ArrayList<Instance>();
 	
 	public Dataset(String path) {
 		JSONObject jsonVal = getJSONFile(path);
-		datasetID = Integer.parseInt(jsonVal.get("dataset id").toString());
-		datasetName = jsonVal.get("dataset name").toString();
-		maxNumLabsPerIns = Integer.parseInt(jsonVal.get("maximum number of labels per instance").toString());
+		datasetID = new ID(Integer.parseInt(jsonVal.get("dataset id").toString()));
+		datasetName = new Text(jsonVal.get("dataset name").toString());
+		maxNumLabsPerIns = new MaxNumLabsPerIns(Integer.parseInt(jsonVal.get("maximum number of labels per instance").toString()));
 		getLabels(jsonVal, arListLab);
 		getInstances(jsonVal, arListIns);
 	}
@@ -40,8 +40,8 @@ public class Dataset {
 		Iterator<JSONObject> iteratorForLabelText = indexInJSON.iterator();
 
 		for (int i = 0; i < indexInJSON.size(); i++) {
-			arListLab.add(new Label(Integer.parseInt(iteratorForLabelID.next().get("label id").toString()),
-					iteratorForLabelText.next().get("label text").toString()));
+			arListLab.add(new Label(new ID(Integer.parseInt(iteratorForLabelID.next().get("label id").toString())),
+					new Text(iteratorForLabelText.next().get("label text").toString())));
 		}
 	}
 
@@ -53,32 +53,32 @@ public class Dataset {
 		Iterator<JSONObject> iteratorForinstanceID = indexInJSON.iterator();
 
 		for (int i = 0; i < indexInJSON.size(); i++) {
-			arListIns.add(new Instance(Integer.parseInt(iteratorForinstanceID.next().get("id").toString()),
-					iteratorForinstanceText.next().get("instance").toString(), datasetID));
+			arListIns.add(new Instance(new ID(Integer.parseInt(iteratorForinstanceID.next().get("id").toString())),
+					new Text(iteratorForinstanceText.next().get("instance").toString()), new ID(datasetID.getID())));
 		}
 	}
 	
-	public int getDatasetID() {
+	public ID getDatasetID() {
 		return datasetID;
 	}
 	
-	public void setDatasetID(int datasetID) {
+	public void setDatasetID(ID datasetID) {
 		this.datasetID = datasetID;
 	}
 	
-	public String getDatasetName() {
+	public Text getDatasetName() {
 		return datasetName;
 	}
 	
-	public void setDatasetName(String datasetName) {
+	public void setDatasetName(Text datasetName) {
 		this.datasetName = datasetName;
 	}
 	
-	public int getMaxNumLabsPerIns() {
+	public MaxNumLabsPerIns getMaxNumLabsPerIns() {
 		return maxNumLabsPerIns;
 	}
 	
-	public void setMaxNumLabsPerIns(int maxNumLabsPerIns) {
+	public void setMaxNumLabsPerIns(MaxNumLabsPerIns maxNumLabsPerIns) {
 		this.maxNumLabsPerIns = maxNumLabsPerIns;
 	}
 	

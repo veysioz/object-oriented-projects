@@ -1,26 +1,26 @@
 
 public class Label {
-	private int labelID;
-	private String labelText;
+	private ID labelID;
+	private Text labelText;
 	
-	public Label(int labelID, String labelText){
+	public Label(ID labelID, Text labelText){
 		this.labelID = labelID;
 		this.labelText = labelText;
 	}
 
-	public int getLabelID() {
+	public ID getLabelID() {
 		return labelID;
 	}
 
-	public void setLabelID(int instanceID) {
+	public void setLabelID(ID instanceID) {
 		this.labelID = instanceID;
 	}
 
-	public String getLabelText() {
+	public Text getLabelText() {
 		return labelText;
 	}
 
-	public void setLabelText(String instanceText) {
+	public void setLabelText(Text instanceText) {
 		this.labelText = instanceText;
 	}
 }

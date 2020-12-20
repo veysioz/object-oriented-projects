@@ -8,7 +8,7 @@ import org.json.simple.parser.JSONParser;
 public class Config {
 	private ArrayList<Dataset> datasets = new ArrayList<Dataset>();
 	private ArrayList<User> users = new ArrayList<User>();
-	private double ccp;
+	private ConsCheckProb ccp;
 	
 	@SuppressWarnings("unchecked")
 	public Config() {
@@ -26,11 +26,11 @@ public class Config {
 		iter3 = user.iterator();
 		
 		for(int i = 0; i < user.size(); i++)
-			users.add(new User(Integer.parseInt(iter1.next().get("userID").toString()), 
-												iter2.next().get("username").toString(),
-												iter3.next().get("userType").toString()));
+			users.add(new User(new ID(Integer.parseInt(iter1.next().get("userID").toString())), 
+												new Text(iter2.next().get("username").toString()),
+												new Text(iter3.next().get("userType").toString())));
 		
-		ccp = Double.parseDouble(config.get("consistencyCheckProbability").toString());
+		ccp = new ConsCheckProb(Double.parseDouble(config.get("consistencyCheckProbability").toString()));
 	}
 	
 	private JSONObject getJSONFile(String path) {
@@ -54,11 +54,11 @@ public class Config {
 		return users;
 	}
 	
-	public double getCpp() {
+	public ConsCheckProb getCpp() {
 		return ccp;
 	}
 	
-	public void setCpp(double ccp) {
+	public void setCpp(ConsCheckProb ccp) {
 		this.ccp = ccp;
 	}
 }
