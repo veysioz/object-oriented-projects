@@ -1,0 +1,44 @@
+{
+  "dataset": [
+    {
+      "id": 1,
+      "name": "dataset1",
+      "path": "Input-1.json"
+    },
+    {
+      "id": 2,
+      "name": "dataset2",
+      "path": "Input-2.json"
+    }
+  ],
+  "users": [
+    {
+      "userID": 1,
+      "username": "RandomLabelling1",
+      "userType": "RandomBot"
+    },
+    {
+      "userID": 2,
+      "username": "RandomLabelling2",
+      "userType": "RandomBot"
+    },
+    {
+      "userID": 3,
+      "username": "RandomLabelling3",
+      "userType": "RandomBot"
+    },
+    {
+      "userID": 4,
+      "username": "RandomLabelling4",
+      "userType": "RandomBot"
+    },
+    {
+      "userID": 5,
+      "username": "RandomLabelling5",
+      "userType": "RandomBot"
+    }
+  ],
+  
+  "consistencyCheckProbability": 0.1
+
+}
