@@ -6,10 +6,12 @@ public class Instance {
 	private String instanceText;
 	private ArrayList<Label> assignedLabs = new ArrayList<Label>();
 	private Date assignedDate;
+	private int datasetID;
 	
-	public Instance(int instanceID, String instanceText){
+	public Instance(int instanceID, String instanceText, int datasetID){
 		this.instanceID = instanceID;
 		this.instanceText = instanceText;
+		this.datasetID = datasetID;
 	}
 
 	public int getInstanceID() {
@@ -32,11 +34,23 @@ public class Instance {
 		return assignedLabs;
 	}
 	
+	public void setAssignedLabs(ArrayList<Label> assignedLabs) {
+		this.assignedLabs = assignedLabs;
+	}
+	
 	public Date getAssignedDate() {
 		return assignedDate;
 	}
 
 	public void setAssignedDate(Date assignedDate) {
 		this.assignedDate = assignedDate;
+	}
+	
+	public int getDatasetID() {
+		return datasetID;
+	}
+	
+	public void setDataset(int datasetID) {
+		this.datasetID = datasetID;
 	}
 }

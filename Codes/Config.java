@@ -8,7 +8,7 @@ import org.json.simple.parser.JSONParser;
 public class Config {
 	private ArrayList<Dataset> datasets = new ArrayList<Dataset>();
 	private ArrayList<User> users = new ArrayList<User>();
-	private float ccp;
+	private double ccp;
 	
 	@SuppressWarnings("unchecked")
 	public Config() {
@@ -30,7 +30,7 @@ public class Config {
 												iter2.next().get("username").toString(),
 												iter3.next().get("userType").toString()));
 		
-		ccp = Float.parseFloat(config.get("consistencyCheckProbability").toString());
+		ccp = Double.parseDouble(config.get("consistencyCheckProbability").toString());
 	}
 	
 	private JSONObject getJSONFile(String path) {
@@ -54,11 +54,11 @@ public class Config {
 		return users;
 	}
 	
-	public float getCpp() {
+	public double getCpp() {
 		return ccp;
 	}
 	
-	public void setCpp(float ccp) {
+	public void setCpp(double ccp) {
 		this.ccp = ccp;
 	}
 }

@@ -28,10 +28,20 @@ public class Test {
 				config.getUsers().forEach((k) -> {
 				    try {
 				    	Date date = new Date();
-				    	System.out.print("\t Dataset ID: " + n.getDatasetID() + " | Instance ID: " + m.getInstanceID() + " | Class Label IDs: ");
-				    	new RandomLabelling(k, new Instance(m.getInstanceID(), m.getInstanceText()), date, n);
-				    	System.out.println(" | User ID: " + k.getUserID() + " | Date & Time: " + formatter.format(date));
-						Thread.sleep(500);
+				    	if(ccpPercent(config.getCpp()) && !k.getAssignedIns().isEmpty()) {
+				    		Instance ins = k.getAssignedIns().get((int)(Math.random() * k.getAssignedIns().size()));
+				    		System.out.print("\t Dataset ID: " + ins.getDatasetID() + " | Instance ID: " + ins.getInstanceID() + " | Class Label IDs: ");
+				    		RandomLabelling randLab = new RandomLabelling(k, ins, date, config.getDatasets().get(ins.getDatasetID()-1), true);
+				    		System.out.print(" | User ID: " + k.getUserID() + " | Date & Time: " + formatter.format(date));
+				    		System.out.println(" | Consistency: " + randLab.getConsistency() + " %");
+				    	}
+				    	else {
+				    		System.out.print("\t Dataset ID: " + n.getDatasetID() + " | Instance ID: " + m.getInstanceID() + " | Class Label IDs: ");
+				    		new RandomLabelling(k, new Instance(m.getInstanceID(), m.getInstanceText(), n.getDatasetID()), date, n, false);
+				    		System.out.println(" | User ID: " + k.getUserID() + " | Date & Time: " + formatter.format(date));
+				    	}
+				    	
+				    	Thread.sleep(500);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -39,10 +49,20 @@ public class Test {
 			});
 		});
 	}
-
+	
+	public static boolean ccpPercent(double ccp) {
+		int rand = (int)(Math.random() * 100) + 1;
+		ccp = (int)(ccp * 100);
+		
+		if(rand <= ccp && rand >= 0)
+			return true;
+		else
+			return false;
+	}
+	
 	/*static int counter, k;
 	@SuppressWarnings("resource")
-	private static void writeJsonToFile(Dataset dataset, ArrayList<User> users, SimpleDateFormat formatter) throws IOException {
+	private static void writeJSON(Dataset dataset, ArrayList<User> users, SimpleDateFormat formatter) throws IOException {
 
 		File file = new File("Output.json");
 		FileWriter fileWrite;

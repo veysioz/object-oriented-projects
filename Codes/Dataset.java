@@ -54,7 +54,7 @@ public class Dataset {
 
 		for (int i = 0; i < indexInJSON.size(); i++) {
 			arListIns.add(new Instance(Integer.parseInt(iteratorForinstanceID.next().get("id").toString()),
-					iteratorForinstanceText.next().get("instance").toString()));
+					iteratorForinstanceText.next().get("instance").toString(), datasetID));
 		}
 	}
 	
