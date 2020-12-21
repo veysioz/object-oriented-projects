@@ -1,38 +1,38 @@
 import java.util.ArrayList;
 
 public class User {
-	private ID userID;
-	private Text userName;
-	private Text userType;
+	private int userID;
+	private String userName;
+	private String userType;
 	private ArrayList<Instance> assignedIns = new ArrayList<Instance>();
 	
-	public User(ID userID, Text userName, Text userType){
+	public User(int userID, String userName, String userType){
 		this.userID = userID;
 		this.userName = userName;
 		this.userType = userType;
 	}
 	
-	public ID getUserID() {
+	public int getUserID() {
 		return userID;
 	}
 	
-	public void setUserId(ID userID) {
+	public void setUserId(int userID) {
 		this.userID = userID;
 	}
 	
-	public Text getUserName() {
+	public String getUserName() {
 		return userName;
 	}
 	
-	public void setUserName(Text userName) {
+	public void setUserName(String userName) {
 		this.userName = userName;
 	}
 	
-	public Text getUserType() {
+	public String getUserType() {
 		return userType;
 	}
 	
-	public void setUserType(Text userType) {
+	public void setUserType(String userType) {
 		this.userType = userType;
 	}
 	
