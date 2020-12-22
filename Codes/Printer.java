@@ -135,13 +135,6 @@ public class Printer extends Thread{
 
     }
     public void writeToJsonFile(JSONObject obj){
-    	try {
-			FileOutputStream fos=new FileOutputStream("OutputJSON.json", true);
-
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}  // true for append mode
     	FileWriter file = null;
     	try {
         	file = new FileWriter("OutputJSON.json");
