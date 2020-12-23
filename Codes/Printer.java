@@ -132,7 +132,7 @@ public class Printer extends Thread{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	    //CONSOLDEKİ İŞLEMİN TERMİNATE EDİLENE KADAR DEVAM ETMESİNİ SAĞLAR
+	    // It provides that the program runs until it terminated by Enter Key!
 	    while(true){
 			writeToConsole();
 			writeToJsonFile(obj);
