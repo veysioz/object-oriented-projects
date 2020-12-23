@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 
 public class RandomLabelling {
 	private final Logger LOGGER = LogManager.getLogger();
-	int consistency = 0;
+	private int consistency = 0;
 	private JsonArray labelID;
 	public JsonArray getLabelID() {
 		return labelID;

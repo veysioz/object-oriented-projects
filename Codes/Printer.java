@@ -96,7 +96,7 @@ public class Printer extends Thread{
 				    		labelAssigment.put(" Consistency", randLab.getConsistency() + " %");
 				    		lblAssigment.add(labelAssigment);
 				    		obj.put("Class Label Assignments", lblAssigment);
-							LOGGER.info("Consistency of Labelling:%{}",randLab.consistency);
+							LOGGER.info("Consistency of Labelling:%{}",randLab.getConsistency());
 				    		writeToJsonFile(obj);
 				    	}
 				    	else {
