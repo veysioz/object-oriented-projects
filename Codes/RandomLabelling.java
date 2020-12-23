@@ -1,9 +1,11 @@
 import java.util.ArrayList;
 import java.util.Date;
-
 import com.google.gson.JsonArray;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class RandomLabelling {
+	private final Logger LOGGER = LogManager.getLogger();
 	int consistency = 0;
 	private JsonArray labelID;
 	public JsonArray getLabelID() {
@@ -40,6 +42,8 @@ public class RandomLabelling {
 			ar.add(n.getLabelID());
 		});
 		setLabelID(ar);
+		LOGGER.info("The user:{} labelled the instance:{} with class label:{} in dataset:{}.{}",user.getUserName(), ins.getInstanceID(),this.getLabelID(),dataset.getDatasetID(),dataset.getDatasetName());
+
 	}
 
 	public int getConsistency() {
@@ -57,7 +61,6 @@ public class RandomLabelling {
 
 		double max = Math.max(beforeTemp.size(), afterTemp.size());
 		afterTemp.retainAll(beforeTemp);
-
 		return (int)((afterTemp.size() / max) * 100);
 	}
 }

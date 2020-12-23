@@ -4,8 +4,11 @@ import java.util.Iterator;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class Config {
+	private final Logger LOGGER = LogManager.getLogger();
 	private ArrayList<Dataset> datasets = new ArrayList<Dataset>();
 	private ArrayList<User> users = new ArrayList<User>();
 	private double ccp;
@@ -31,6 +34,7 @@ public class Config {
 												iter3.next().get("userType").toString()));
 		
 		ccp = Double.parseDouble(config.get("consistencyCheckProbability").toString());
+		LOGGER.info("CPP in config.json = {} ",getCpp());
 	}
 	
 	private JSONObject getJSONFile(String path) {
@@ -40,6 +44,9 @@ public class Config {
 		try {
 			Object obj = parser.parse(new FileReader(path));
 			jsonObject = (JSONObject) obj;
+			LOGGER.info("{} opened!",path);
+
+
 		} catch (Exception e) {
 			System.out.println(e);
 		}

@@ -6,11 +6,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import org.json.simple.JSONObject;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class Printer extends Thread{
 	private JSONObject obj ;
 	ArrayList<JSONObject> lblAssigment = new ArrayList<JSONObject>();
-
+	private final Logger LOGGER = LogManager.getLogger();
 	@SuppressWarnings({ "static-access", "unchecked" })
 	public  void writeToConsole(){
 		Config config = new Config();
@@ -50,6 +52,7 @@ public class Printer extends Thread{
 				instance.put("Instance ID", m.getInstanceID());
 				instance.put("Instance Text", m.getInstanceText());
 				objInstance.add(instance);
+				LOGGER.info("The Instance:{} in {} is handled",m.getInstanceID(),n.getDatasetName());
 				});
 			datasetInfo.put("Instance",objInstance);
 
@@ -93,6 +96,7 @@ public class Printer extends Thread{
 				    		labelAssigment.put(" Consistency", randLab.getConsistency() + " %");
 				    		lblAssigment.add(labelAssigment);
 				    		obj.put("Class Label Assignments", lblAssigment);
+							LOGGER.info("Consistency of Labelling:%{}",randLab.consistency);
 				    		writeToJsonFile(obj);
 				    	}
 				    	else {
@@ -108,6 +112,7 @@ public class Printer extends Thread{
 				    		obj.put("Class Label Assignments", lblAssigment);
 				    		writeToJsonFile(obj);
 				    	}
+				    	System.out.println("");
 				    	Thread.sleep(500);
 					} catch (InterruptedException e) {
 						e.printStackTrace();

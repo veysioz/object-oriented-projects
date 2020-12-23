@@ -2,6 +2,8 @@ import java.io.*;
 import java.util.*;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class Dataset {
 	private int datasetID;
@@ -9,7 +11,8 @@ public class Dataset {
 	private int maxNumLabsPerIns;
 	private ArrayList<Label> arListLab = new ArrayList<Label>();
 	private ArrayList<Instance> arListIns = new ArrayList<Instance>();
-	
+	private final Logger LOGGER = LogManager.getLogger();
+
 	public Dataset(String path) {
 		JSONObject jsonVal = getJSONFile(path);
 		datasetID = Integer.parseInt(jsonVal.get("dataset id").toString());
@@ -17,6 +20,8 @@ public class Dataset {
 		maxNumLabsPerIns = Integer.parseInt(jsonVal.get("maximum number of labels per instance").toString());
 		getLabels(jsonVal, arListLab);
 		getInstances(jsonVal, arListIns);
+		LOGGER.info("Dataset:{}-{} created.",datasetID,datasetName);
+		LOGGER.info("Maximum number of labels per instance is {}\n",maxNumLabsPerIns);
 	}
 
 	private JSONObject getJSONFile(String path) {

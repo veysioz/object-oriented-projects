@@ -8,7 +8,7 @@ public class Test{
         new Starter().start();
         new Printer().start();
     }
-    public static boolean ccpPercent(double ccp) {
+    public boolean ccpPercent(double ccp) {
 
 		int rand = (int)(Math.random() * 100) + 1;
 		ccp = (int)(ccp * 100);

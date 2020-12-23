@@ -7,7 +7,8 @@ public class Instance {
 	private ArrayList<Label> assignedLabs = new ArrayList<Label>();
 	private Date assignedDate;
 	private int datasetID;
-	
+
+
 	public Instance(int instanceID, String instanceText, int datasetID){
 		this.instanceID = instanceID;
 		this.instanceText = instanceText;
