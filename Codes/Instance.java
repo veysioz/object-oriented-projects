@@ -1,57 +1,46 @@
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Instance {
 	private int instanceID;
 	private String instanceText;
-	private ArrayList<Label> assignedLabs = new ArrayList<Label>();
-	private Date assignedDate;
-	private int datasetID;
-
-
-	public Instance(int instanceID, String instanceText, int datasetID){
+	private boolean isLabeled;
+	private ArrayList<Label> assignedLabels = new ArrayList<Label>();
+	
+	public Instance(int instanceID, String instanceText, boolean isLabeled){
 		this.instanceID = instanceID;
 		this.instanceText = instanceText;
-		this.datasetID = datasetID;
+		this.isLabeled = isLabeled;
 	}
 
 	public int getInstanceID() {
 		return instanceID;
 	}
 
-	public void setInstanceID(int instanceID) {
-		this.instanceID = instanceID;
-	}
-
 	public String getInstanceText() {
 		return instanceText;
 	}
-
-	public void setInstanceText(String instanceText) {
-		this.instanceText = instanceText;
+	
+	public Label getAssignedLabel(int id) {
+		return assignedLabels.get(id - 1);
 	}
 	
-	public ArrayList<Label> getAssignedLabs() {
-		return assignedLabs;
+	public int getAssignedLabelSize() {
+		return assignedLabels.size();
 	}
 	
-	public void setAssignedLabs(ArrayList<Label> assignedLabs) {
-		this.assignedLabs = assignedLabs;
+	public void clearAssignedLabel() {
+		assignedLabels.clear();
 	}
 	
-	public Date getAssignedDate() {
-		return assignedDate;
-	}
-
-	public void setAssignedDate(Date assignedDate) {
-		this.assignedDate = assignedDate;
+	public void addAssignedLabel(Label label) {
+		assignedLabels.add(label);
 	}
 	
-	public int getDatasetID() {
-		return datasetID;
+	public boolean getIsLabeled() {
+		return isLabeled;
 	}
 	
-	public void setDataset(int datasetID) {
-		this.datasetID = datasetID;
+	public void setIsLabeled(boolean isLabeled) {
+		this.isLabeled = isLabeled;
 	}
 }

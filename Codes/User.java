@@ -1,45 +1,47 @@
 import java.util.ArrayList;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+
 public class User {
 	private int userID;
 	private String userName;
 	private String userType;
-	private ArrayList<Instance> assignedIns = new ArrayList<Instance>();
-	private final Logger LOGGER = LogManager.getLogger();
-
-	public User(int userID, String userName, String userType){
+	private String password;
+	private ArrayList<Dataset> datasets = new ArrayList<Dataset>();
+	private double ccp;
+	
+	public User(int userID, String userName, String userType, String password, double ccp, ArrayList<Dataset> datasets){
 		this.userID = userID;
 		this.userName = userName;
 		this.userType = userType;
-		LOGGER.info("User:{}-{} has created as type of {}",this.getUserID(),this.getUserName(),this.getUserType());
+		this.password = password;
+		this.ccp = ccp;
+		this.datasets = datasets;
+	}
+	
+	public Dataset getDataset(int id) {
+		return datasets.get(id - 1);
+	}
+	
+	public int getDatasetSize() {
+		return datasets.size();
 	}
 	
 	public int getUserID() {
 		return userID;
 	}
 	
-	public void setUserId(int userID) {
-		this.userID = userID;
-	}
-	
 	public String getUserName() {
 		return userName;
-	}
-	
-	public void setUserName(String userName) {
-		this.userName = userName;
 	}
 	
 	public String getUserType() {
 		return userType;
 	}
 	
-	public void setUserType(String userType) {
-		this.userType = userType;
+	public String getPassword() {
+		return password;
 	}
 	
-	public ArrayList<Instance> getAssignedIns() {
-		return assignedIns;
+	public double getCCP() {
+		return ccp;
 	}
 }

@@ -2,26 +2,21 @@ import java.io.*;
 import java.util.*;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
 public class Dataset {
 	private int datasetID;
 	private String datasetName;
 	private int maxNumLabsPerIns;
-	private ArrayList<Label> arListLab = new ArrayList<Label>();
-	private ArrayList<Instance> arListIns = new ArrayList<Instance>();
-	private final Logger LOGGER = LogManager.getLogger();
-
+	private ArrayList<Label> labels = new ArrayList<Label>();
+	private ArrayList<Instance> instances = new ArrayList<Instance>();
+	
 	public Dataset(String path) {
 		JSONObject jsonVal = getJSONFile(path);
 		datasetID = Integer.parseInt(jsonVal.get("dataset id").toString());
 		datasetName = jsonVal.get("dataset name").toString();
 		maxNumLabsPerIns = Integer.parseInt(jsonVal.get("maximum number of labels per instance").toString());
-		getLabels(jsonVal, arListLab);
-		getInstances(jsonVal, arListIns);
-		LOGGER.info("Dataset:{}-{} created.",datasetID,datasetName);
-		LOGGER.info("Maximum number of labels per instance is {}\n",maxNumLabsPerIns);
+		getLabels(jsonVal, labels);
+		getInstances(jsonVal, instances);
 	}
 
 	private JSONObject getJSONFile(String path) {
@@ -51,15 +46,15 @@ public class Dataset {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void getInstances(JSONObject jsonObject, ArrayList<Instance> arListIns) {
+	private void getInstances(JSONObject jsonObject, ArrayList<Instance> instances) {
 		JSONArray indexInJSON = (JSONArray) jsonObject.get("instances");
 
 		Iterator<JSONObject> iteratorForinstanceText = indexInJSON.iterator();
 		Iterator<JSONObject> iteratorForinstanceID = indexInJSON.iterator();
 
 		for (int i = 0; i < indexInJSON.size(); i++) {
-			arListIns.add(new Instance(Integer.parseInt(iteratorForinstanceID.next().get("id").toString()),
-					iteratorForinstanceText.next().get("instance").toString(), datasetID));
+			instances.add(new Instance(Integer.parseInt(iteratorForinstanceID.next().get("id").toString()),
+					iteratorForinstanceText.next().get("instance").toString(), false));
 		}
 	}
 	
@@ -67,31 +62,27 @@ public class Dataset {
 		return datasetID;
 	}
 	
-	public void setDatasetID(int datasetID) {
-		this.datasetID = datasetID;
-	}
-	
 	public String getDatasetName() {
 		return datasetName;
-	}
-	
-	public void setDatasetName(String datasetName) {
-		this.datasetName = datasetName;
 	}
 	
 	public int getMaxNumLabsPerIns() {
 		return maxNumLabsPerIns;
 	}
-	
-	public void setMaxNumLabsPerIns(int maxNumLabsPerIns) {
-		this.maxNumLabsPerIns = maxNumLabsPerIns;
+
+	public Label getLabel(int id) {
+		return labels.get(id - 1);
 	}
 	
-	public ArrayList<Label> getArListLab() {
-		return arListLab;
+	public int getLabelSize() {
+		return labels.size();
 	}
 	
-	public ArrayList<Instance> getArListIns() {
-		return arListIns;
+	public Instance getInstance(int id) {
+		return instances.get(id - 1);
+	}
+	
+	public int getInstanceSize() {
+		return instances.size();
 	}
 }
