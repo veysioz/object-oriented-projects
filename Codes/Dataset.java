@@ -1,17 +1,14 @@
-import java.io.*;
 import java.util.*;
 import org.json.simple.*;
-import org.json.simple.parser.JSONParser;
-
 public class Dataset {
 	private int datasetID;
 	private String datasetName;
 	private int maxNumLabsPerIns;
 	private ArrayList<Label> labels = new ArrayList<Label>();
 	private ArrayList<Instance> instances = new ArrayList<Instance>();
-	
+
 	public Dataset(String path) {
-		JSONObject jsonVal = getJSONFile(path);
+		JSONObject jsonVal = new JsonProcess().getJSONFile(path);
 		datasetID = Integer.parseInt(jsonVal.get("dataset id").toString());
 		datasetName = jsonVal.get("dataset name").toString();
 		maxNumLabsPerIns = Integer.parseInt(jsonVal.get("maximum number of labels per instance").toString());
@@ -19,19 +16,6 @@ public class Dataset {
 		getInstances(jsonVal, instances);
 	}
 
-	private JSONObject getJSONFile(String path) {
-		JSONParser parser = new JSONParser();
-		JSONObject jsonObject = null;
-
-		try {
-			Object obj = parser.parse(new FileReader(path));
-			jsonObject = (JSONObject) obj;
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		return jsonObject;
-	}
-	
 	@SuppressWarnings("unchecked")
 	private void getLabels(JSONObject jsonObject, ArrayList<Label> arListLab) {
 		JSONArray indexInJSON = (JSONArray) jsonObject.get("class labels");
@@ -57,15 +41,15 @@ public class Dataset {
 					iteratorForinstanceText.next().get("instance").toString(), false));
 		}
 	}
-	
+
 	public int getDatasetID() {
 		return datasetID;
 	}
-	
+
 	public String getDatasetName() {
 		return datasetName;
 	}
-	
+
 	public int getMaxNumLabsPerIns() {
 		return maxNumLabsPerIns;
 	}
@@ -73,15 +57,15 @@ public class Dataset {
 	public Label getLabel(int id) {
 		return labels.get(id - 1);
 	}
-	
+
 	public int getLabelSize() {
 		return labels.size();
 	}
-	
+
 	public Instance getInstance(int id) {
 		return instances.get(id - 1);
 	}
-	
+
 	public int getInstanceSize() {
 		return instances.size();
 	}

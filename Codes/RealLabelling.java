@@ -3,10 +3,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
-public class RealLabelling {
-	
-	@SuppressWarnings("resource")
-	public RealLabelling(User user, int currentDatasetID) {
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+public class RealLabelling{
+
+	@SuppressWarnings({ "resource", "unchecked" })
+	public RealLabelling(User user, int currentDatasetID,ArrayList<JSONObject> objListReal,JSONObject mainObj1) {
+		JSONObject tempObj = new JSONObject();
+		JSONArray assigmentsJsonAr = new JSONArray();
+
 		Scanner scanner = new Scanner(System.in);
 		Dataset dataset = user.getDataset(currentDatasetID);
 		Instance instance = null;
@@ -15,7 +21,7 @@ public class RealLabelling {
 		int counter = 0;
 		String input;
 		boolean validLabs = true;
-		
+
 		for(int i = 1; i <= dataset.getInstanceSize(); i++) {
 			if(dataset.getInstance(i).getIsLabeled())
 				if(++counter == dataset.getInstanceSize()) probability = true;
@@ -33,7 +39,7 @@ public class RealLabelling {
 				}
 			}
 		}
-		
+
 		System.out.println("\n\tDataset: " + dataset.getDatasetID() + ". " + dataset.getDatasetName());
 		System.out.println("\tInstance: " + instance.getInstanceID() + ". " + instance.getInstanceText());
 		System.out.print("\t(");
@@ -41,7 +47,7 @@ public class RealLabelling {
 			System.out.print(dataset.getLabel(i).getLabelID() + ". " + dataset.getLabel(i).getLabelText() + " ");
 		System.out.print(")\n\tEnter your label ID(s) with spaces (Max Label: " + dataset.getMaxNumLabsPerIns() + "): ");
 		input = scanner.nextLine();
-		
+
 		String[] labels = input.split("\\s+");
 		while(validLabs) {
 			validLabs = false;
@@ -60,7 +66,7 @@ public class RealLabelling {
 					validLabs = true;
 					break;
 				}
-					
+
 			}
 			if(validLabs) {
 				System.out.print("\t(Wrong Input!) Enter your label ID(s) with spaces (Max Label: " + dataset.getMaxNumLabsPerIns() + "): ");
@@ -68,24 +74,42 @@ public class RealLabelling {
 				labels = input.split("\\s+");
 			}
 		}
-		
+
 		for(int i = 0; i < labels.length; i++) {
 			instance.addAssignedLabel(new Label(dataset.getLabel(Integer.parseInt(labels[i])).getLabelID(), dataset.getLabel(Integer.parseInt(labels[i])).getLabelText()));
 			list.add(new Label(dataset.getLabel(Integer.parseInt(labels[i])).getLabelID(), dataset.getLabel(Integer.parseInt(labels[i])).getLabelText()));
 		}
-		
+
 		System.out.print("\tAssignment(s): ");
-		for(int i = 1; i <= instance.getAssignedLabelSize(); i++)
+		assigmentsJsonAr.clear();
+		for(int i = 1; i <= instance.getAssignedLabelSize(); i++){
 			System.out.print(instance.getAssignedLabel(i).getLabelID() + ". " + instance.getAssignedLabel(i).getLabelText() + " ");
+
+			JSONObject assigmentObj = new JSONObject();
+			assigmentObj.put(instance.getAssignedLabel(i).getLabelID(), instance.getAssignedLabel(i).getLabelText());
+			assigmentsJsonAr.add(assigmentObj);
+		}
+
 		System.out.println("\n\tUsername: " + user.getUserName());
 		System.out.println("\tDate & Time: " + new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss").format(new Date()));
 		if(probability && counter > 0) System.out.println("\tConsistency: " + new Consistency(temp, list).getPercentage());
-		
+//**************   JSON PRINT **********************************************
+		tempObj.put("Dataset", dataset.getDatasetID() + ". " + dataset.getDatasetName());
+		tempObj.put("Instance", instance.getInstanceID() + ". " + instance.getInstanceText());
+		tempObj.put("Assignment(s)", assigmentsJsonAr);
+		tempObj.put("Username", user.getUserName());
+		tempObj.put("Date & Time", new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss").format(new Date()));
+		if(probability && counter > 0)
+			tempObj.put("Consistency", new Consistency(temp, list).getPercentage());
+		objListReal.add(tempObj);
+		new JsonProcess().addListToJSON(objListReal, mainObj1);
+//**************   END-JSON PRINT **********************************************
+
 		System.out.print("\t(1. Continue, 2. Logout): ");
 		input = scanner.nextLine();
 		while(true) {
 			if(input.equals("1")) {
-				new RealLabelling(user, currentDatasetID);
+				new RealLabelling(user, currentDatasetID , objListReal,mainObj1);
 				break;
 			} else if(input.equals("2")) {
 				System.out.println();
@@ -96,7 +120,7 @@ public class RealLabelling {
 			}
 		}
 	}
-	
+
 	public boolean isDuplicate(String[] sArr) {
 		int countDups = 0;
 		for(String s : sArr) {

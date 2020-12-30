@@ -1,16 +1,21 @@
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
-public class RandomLabelling {
-	
-	public RandomLabelling(User user, int currentDatasetID) {
+public class RandomLabelling{
+
+	@SuppressWarnings("unchecked")
+	public RandomLabelling(User user, int currentDatasetID,ArrayList<JSONObject> objListJ,JSONObject mainObj1) {
+		JSONObject tempObj = new JSONObject();
+		JSONArray assigmentsJsonAr = new JSONArray();
 		Dataset dataset = user.getDataset(currentDatasetID);
 		Instance instance = null;
 		ArrayList<Label> listA = new ArrayList<Label>(), listB = new ArrayList<Label>();
 		boolean probability = new Probability(user.getCCP()).isTrue();
 		int counter = 0;
-		
+
 		for(int i = 1; i <= dataset.getInstanceSize(); i++) {
 			if(dataset.getInstance(i).getIsLabeled())
 				if(++counter == dataset.getInstanceSize()) probability = true;
@@ -28,7 +33,7 @@ public class RandomLabelling {
 				}
 			}
 		}
-		
+
 		int random1 = (int)(Math.random() * dataset.getMaxNumLabsPerIns()) + 1, random2;
 		for(int i = 0; i < random1; i++) {
 			random2 = (int)(Math.random() * dataset.getLabelSize()) + 1;
@@ -41,15 +46,33 @@ public class RandomLabelling {
 				listB.add(label);
 			}
 		}
-		
+
 		System.out.println("\n\tDataset: " + dataset.getDatasetID() + ". " + dataset.getDatasetName());
 		System.out.println("\tInstance: " + instance.getInstanceID() + ". " + instance.getInstanceText());
 		System.out.print("\tAssignment(s): ");
-		for(int i = 1; i <= instance.getAssignedLabelSize(); i++)
+		assigmentsJsonAr.clear();
+		for(int i = 1; i <= instance.getAssignedLabelSize(); i++){
 			System.out.print(instance.getAssignedLabel(i).getLabelID() + ". " + instance.getAssignedLabel(i).getLabelText() + " ");
+
+			JSONObject assigmentObj = new JSONObject();
+			assigmentObj.put(instance.getAssignedLabel(i).getLabelID(), instance.getAssignedLabel(i).getLabelText());
+			assigmentsJsonAr.add(assigmentObj);
+		}
 		System.out.println("\n\tUsername: " + user.getUserName());
 		System.out.println("\tDate & Time: " + new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss").format(new Date()));
 		if(probability && counter > 0) System.out.println("\tConsistency: " + new Consistency(listA, listB).getPercentage());
 		System.out.println();
+//************* PRINT JSON *******************
+		tempObj.put("Dataset", dataset.getDatasetID() + ". " + dataset.getDatasetName());
+		tempObj.put("Instance", instance.getInstanceID() + ". " + instance.getInstanceText());
+		tempObj.put("Assignment(s)",assigmentsJsonAr);
+		tempObj.put("Username", user.getUserName());
+		tempObj.put("Date & Time", new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss").format(new Date()));
+		if(probability && counter > 0)
+			tempObj.put("Consistency", new Consistency(listA, listB).getPercentage());
+
+		objListJ.add(tempObj);
+		new JsonProcess().addListToJSON(objListJ, mainObj1);
+//*************|| END || PRINT JSON *******************
 	}
 }
