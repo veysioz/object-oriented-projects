@@ -3,9 +3,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class RandomLabelling{
-
+	private final Logger LOGGER = LogManager.getLogger();
 	@SuppressWarnings("unchecked")
 	public RandomLabelling(User user, int currentDatasetID,ArrayList<JSONObject> objListJ,JSONObject mainObj1) {
 		JSONObject tempObj = new JSONObject();
@@ -74,5 +76,10 @@ public class RandomLabelling{
 		objListJ.add(tempObj);
 		new JsonProcess().addListToJSON(objListJ, mainObj1);
 //*************|| END || PRINT JSON *******************
+		String assigns="",consistency="";
+		for (Label lab : listB) assigns+=lab.getLabelID()+" ";
+		if(probability && counter > 0)  consistency+="The consistency: "+new Consistency(listA, listB).getPercentage();
+		LOGGER.info("User:{} labelled the instance:{} with label:{} in dataset:{}. {}"
+				,user.getUserName(),instance.getInstanceID(),assigns,dataset.getDatasetID(),consistency);
 	}
 }

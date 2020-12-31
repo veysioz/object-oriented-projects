@@ -6,8 +6,11 @@ import java.util.Scanner;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-public class RealLabelling{
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
+public class RealLabelling{
+	private final Logger LOGGER = LogManager.getLogger();
 	@SuppressWarnings({ "resource", "unchecked" })
 	public RealLabelling(User user, int currentDatasetID,ArrayList<JSONObject> objListReal,JSONObject mainObj1) {
 		JSONObject tempObj = new JSONObject();
@@ -104,7 +107,11 @@ public class RealLabelling{
 		objListReal.add(tempObj);
 		new JsonProcess().addListToJSON(objListReal, mainObj1);
 //**************   END-JSON PRINT **********************************************
-
+		String assigns="",consistency="";
+		for (Label lab : list) assigns+=lab.getLabelID()+" ";
+		if(probability && counter > 0)  consistency+="The consistency: "+new Consistency(temp, list).getPercentage();
+		LOGGER.info("User:{} labelled the instance:{} with label:{} in dataset:{}. {}"
+				,user.getUserName(),instance.getInstanceID(),assigns,dataset.getDatasetID(),consistency);
 		System.out.print("\t(1. Continue, 2. Logout): ");
 		input = scanner.nextLine();
 		while(true) {
