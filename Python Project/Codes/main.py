@@ -1,27 +1,13 @@
 from classes import *
-import re
 
-class_list = ClassList()
-output = Output()
+student_list = StudentList('CES3063_Fall2020_rptSinifListesi.XLS')
 
-students = []
-no = 1
-for i in range(class_list.sheet.col(0).__len__()):
-    row = class_list.sheet.row(i)
-    if re.match(r'^-?\d+(?:\.\d+)?$', str(row.__getitem__(1).value)):
-        students.append(Student(no, row.__getitem__(2).value, row.__getitem__(4).value, row.__getitem__(7).value))
-        no += 1
+reports = Reports('zoom_poll_reports', student_list)
+reports.read_reports()
 
-row_num = 0
-output.write_title(row_num, 0, "NO")
-output.write_title(row_num, 1, "ID")
-output.write_title(row_num, 2, "Name")
-output.write_title(row_num, 3, "Surname")
-for s in students:
-    row_num += 1
-    output.write(row_num, 0, s.no)
-    output.write(row_num, 1, s.id)
-    output.write(row_num, 2, s.name)
-    output.write(row_num, 3, s.surname)
+results = Results(student_list.get_students())
 
-output.save()
+attendance = Attendance(student_list.get_students(), results)
+attendance.add_attendance()
+
+results.save_book()
