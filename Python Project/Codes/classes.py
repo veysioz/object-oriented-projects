@@ -203,3 +203,62 @@ class Attendance:
             self.__results.add_cell(self.__results.get_book()["Attendance"], 'G', row,
                                     str(int((float(attendance_number) / total_lessons_number) * 100)) + " %")
             row += 1
+
+
+class AnswerKeys:
+    def __init__(self, file_path):
+        self.__file_path = file_path
+
+    def get_answer_keys(self):
+        files = glob.glob(self.__file_path + "/*.csv")
+        answer_keys = []
+        questions = None
+        for file in files:
+            with open(file, encoding="utf8") as file_name:
+                reader = csv.reader(file_name)
+                for line in reader:
+                    if line.__len__() == 1:
+                        questions = []
+                        poll = Poll(questions)
+                        poll.set_poll_name(line[0])
+                        answer_keys.append(poll)
+                    else:
+                        questions.append(Question(line[0], line[1]))
+        return answer_keys
+
+
+class CheckAnswers:
+    def __init__(self, student_list, results, answer_keys):
+        self.__student_list = student_list
+        self.__results = results
+        self.__answer_keys = answer_keys
+
+    def check(self):
+        for answer_key in self.__answer_keys:
+            self.add_sheet(answer_key.get_poll_name(), len(answer_key.get_questions()))
+            for student in self.__student_list:
+                for poll in student.get_polls():
+                    if self.poll_control(answer_key.get_questions(), poll.get_questions()):
+                        chr_number = ord('D')
+                        for true_answer, student_answer in zip(answer_key.get_questions(), poll.get_questions()):
+                            chr_number += 1
+                            self.__results.add_cell(self.__results.get_book()[answer_key.get_poll_name()],
+                                                    chr(chr_number), student.get_no()+1,
+                                                    int(true_answer.get_answer() == student_answer.get_answer()))
+
+    def add_sheet(self, poll_name, questions_number):
+        self.__results.new_sheet(poll_name)
+        chr_number = ord('D')
+        print()
+        for i in range(questions_number):
+            chr_number += 1
+            self.__results.column_title(self.__results.get_book()[poll_name], chr(chr_number),
+                                        'Q'+str(chr_number - 68), 5)
+
+    def poll_control(self, questions_a, questions_b):
+        if len(questions_a) != len(questions_b):
+            return False
+        for question_a, question_b in zip(questions_a, questions_b):
+            if question_a.get_question() != question_b.get_question():
+                return False
+        return True

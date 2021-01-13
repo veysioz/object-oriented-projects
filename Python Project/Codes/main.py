@@ -8,11 +8,8 @@ results = Results(student_list.get_students())
 
 Attendance(student_list.get_students(), results).add_attendance()
 
-answer_keys = []
-#answer_keys = AnswerKeys('answer_keys').get_answer_keys()
-for answer_key in answer_keys:
-    print(answer_key.get_poll_name(), ":")
-    for question in answer_key:
-        print(question.get_question(), question.get_answer())
+answer_keys = AnswerKeys('answer_keys').get_answer_keys()
+
+CheckAnswers(student_list.get_students(), results, answer_keys).check()
 
 results.save_book()
