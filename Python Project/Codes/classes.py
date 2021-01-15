@@ -3,15 +3,7 @@ import re
 from openpyxl.styles import Font, Alignment
 import csv
 import glob
-
-from tkinter import *
-from tkinter import filedialog
-import tkinter as tk
-
 from openpyxl import Workbook
-import matplotlib.pyplot as plt
-
-
 
 
 class Student:
@@ -41,14 +33,13 @@ class Student:
 class StudentList:
     def __init__(self, file_name):
         self.__students = []
-        book = xlrd.open_workbook(file_name)
-        self.sheet = book.sheet_by_index(0)
+        self.__sheet = xlrd.open_workbook(file_name).sheet_by_index(0)
         self.__generate_students()
 
     def __generate_students(self):
         no = 1
-        for i in range(self.sheet.col(0).__len__()):
-            row = self.sheet.row(i)
+        for i in range(self.__sheet.col(0).__len__()):
+            row = self.__sheet.row(i)
             if re.match(r'^-?\d+(?:\.\d+)?$', str(row.__getitem__(1).value)):
                 self.__students.append(Student(no, row.__getitem__(2).value,
                                                row.__getitem__(4).value, row.__getitem__(7).value))
@@ -143,6 +134,7 @@ class Poll:
     def __init__(self, questions):
         self.__questions = questions
         self.__poll_name = ""
+        self.__poll_date = ""
 
     def get_questions(self):
         return self.__questions
@@ -152,6 +144,12 @@ class Poll:
 
     def set_poll_name(self, poll_name):
         self.__poll_name = poll_name
+
+    def set_poll_date(self, poll_date):
+        self.__poll_date = poll_date
+
+    def get_poll_date(self):
+        return self.__poll_date
 
 
 class Reports:
@@ -174,7 +172,9 @@ class Reports:
                         if line[i].replace(" ", "") != "":
                             questions.append(Question(line[i], line[i+1]))
                         i += 2
-                    student.get_polls().append(Poll(questions))
+                    poll = Poll(questions)
+                    poll.set_poll_date(line[3])
+                    student.get_polls().append(poll)
 
 
 class Attendance:
@@ -182,6 +182,7 @@ class Attendance:
         self.__student_list = student_list
         self.__results = results
         self.__results.new_sheet("Attendance")
+        self.__date_list = []
         results.column_title(results.get_book()["Attendance"], 'E', 'Number of Attendance', 25)
         results.column_title(results.get_book()["Attendance"], 'F', 'Attendance Rate', 25)
         results.column_title(results.get_book()["Attendance"], 'G', 'Attendance Percentage', 25)
@@ -189,9 +190,10 @@ class Attendance:
     def __get_total_lessons_number(self):
         total_lessons_number = 0
         for student in self.__student_list:
+            self.__date_list = []
             lessons_number = 0
             for poll in student.get_polls():
-                if poll.get_questions()[0].get_question() == "Are you attending this lecture?":
+                if self.is_new_attend(poll):
                     lessons_number += 1
                     if lessons_number > total_lessons_number:
                         total_lessons_number = lessons_number
@@ -201,9 +203,10 @@ class Attendance:
         total_lessons_number = self.__get_total_lessons_number()
         row = 2
         for student in self.__student_list:
+            self.__date_list = []
             attendance_number = 0
             for poll in student.get_polls():
-                if poll.get_questions()[0].get_question() == "Are you attending this lecture?":
+                if self.is_new_attend(poll):
                     attendance_number += 1
             self.__results.add_cell(self.__results.get_book()["Attendance"], 'E', row, attendance_number)
             self.__results.add_cell(self.__results.get_book()["Attendance"], 'F', row,
@@ -211,6 +214,21 @@ class Attendance:
             self.__results.add_cell(self.__results.get_book()["Attendance"], 'G', row,
                                     str(int((float(attendance_number) / total_lessons_number) * 100)) + " %")
             row += 1
+
+    def is_new_attend(self, poll):
+        date_student = poll.get_poll_date().split()
+        month_student = date_student[0]
+        day_student = date_student[1]
+        hour_student = date_student[3].split(":")[0]
+        for date in self.__date_list:
+            date_list = date.split()
+            month_list = date_list[0]
+            day_list = date_list[1]
+            hour_list = date_list[3].split(":")[0]
+            if month_student == month_list and day_student == day_list and hour_student == hour_list:
+                return False
+        self.__date_list.append(poll.get_poll_date())
+        return True
 
 
 class AnswerKeys:
@@ -242,22 +260,30 @@ class CheckAnswers:
         self.__answer_keys = answer_keys
 
     def check(self):
+        results = self.__results
+        book = results.get_book()
         for answer_key in self.__answer_keys:
+            answer_name = answer_key.get_poll_name()
             self.add_sheet(answer_key.get_poll_name(), len(answer_key.get_questions()))
+            results.column_title(book[answer_name], 'O', 'Success Rate', 15)
+            results.column_title(book[answer_name], 'P', 'Success Percentage', 20)
             for student in self.__student_list:
                 for poll in student.get_polls():
                     if self.poll_control(answer_key.get_questions(), poll.get_questions()):
                         chr_number = ord('D')
+                        true_number = 0
                         for true_answer, student_answer in zip(answer_key.get_questions(), poll.get_questions()):
                             chr_number += 1
-                            self.__results.add_cell(self.__results.get_book()[answer_key.get_poll_name()],
-                                                    chr(chr_number), student.get_no()+1,
-                                                    int(true_answer.get_answer() == student_answer.get_answer()))
+                            true_number += int(true_answer.get_answer() == student_answer.get_answer())
+                            results.add_cell(book[answer_name], chr(chr_number), student.get_no()+1,
+                                             int(true_answer.get_answer() == student_answer.get_answer()))
+                        success_rate = float(true_number) / len(answer_key.get_questions())
+                        results.add_cell(book[answer_name], 'O', student.get_no()+1, success_rate)
+                        results.add_cell(book[answer_name], 'P', student.get_no() + 1, str(int(success_rate*100))+'%')
 
     def add_sheet(self, poll_name, questions_number):
         self.__results.new_sheet(poll_name)
         chr_number = ord('D')
-        print()
         for i in range(questions_number):
             chr_number += 1
             self.__results.column_title(self.__results.get_book()[poll_name], chr(chr_number),
@@ -270,80 +296,3 @@ class CheckAnswers:
             if question_a.get_question() != question_b.get_question():
                 return False
         return True
-
-
-class GUI:
-
-    def __init__(self):
-        self.window = tk.Tk()
-        self.__file = ""
-        self.window.geometry("800x525")
-        self.window.configure(bg='SkyBlue3')
-        self.window.title("Zoom Attendance and Poll Report")
-        Label(self.window, text='Zoom Attendance and Poll Report', font=('Verdana', 10), bg='SkyBlue3').pack(side=TOP, pady=10)
-        Label(self.window, text='Group 19', font=('Verdana', 8), bg='SkyBlue3').pack(side=BOTTOM,pady=10)
-
-    def get_file(self):
-        return self.__file
-
-    def studentList(self):
-        studentListFile = filedialog.askopenfilename(title="select a student list")
-        self.__studentListFile = studentListFile
-        pathStudentList = tk.Label(text=self.__file)
-        pathStudentList.pack()
-
-    def reports(self):
-        reportsFile = filedialog.askdirectory(title="select a reports")
-        self.__reportsFile = reportsFile
-        pathReportsFile = tk.Label(text=self.__file)
-        pathReportsFile.pack()
-
-    def answers(self):
-        answersFile = filedialog.askdirectory(title="select a answers file")
-        self.__answersFile = answersFile
-        pathAnswersFile = tk.Label(text=self.__file)
-        pathAnswersFile.pack()
-
-    def configButtonXLS(self,button):
-        button.configure(
-            width=25,
-            height=2,
-            bg="turquoise1",
-            fg="black",
-            font=('Verdana', 20)
-        )
-        button.pack()
-
-    def configButtonFolder(self,button):
-        button.configure(
-            width=25,
-            height=2,
-            bg="turquoise3",
-            fg="black",
-            font=('Verdana', 20)
-        )
-        button.pack()
-
-    def configButtonStart(self, button):
-        button.configure(
-            width=25,
-            height=2,
-            bg="cyan3",
-            fg="black",
-            font=('Verdana', 20)
-        )
-        button.pack()
-
-    def startProcess(self):
-        student_list = StudentList(self.__studentListFile)
-        Reports(self.__reportsFile, student_list).read_reports()
-        results = Results(student_list.get_students())
-        Attendance(student_list.get_students(), results).add_attendance()
-        answer_keys = AnswerKeys(self.__answersFile).get_answer_keys()
-        CheckAnswers(student_list.get_students(), results, answer_keys).check()
-        results.save_book()
-        conclusion = tk.Label(text="Process Completed", font=('Verdana', 7), bg='SkyBlue3')
-        conclusion.pack()
-
-    def compileWindow(self):
-        self.window.mainloop()
