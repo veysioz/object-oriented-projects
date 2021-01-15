@@ -3,7 +3,14 @@ import re
 from openpyxl.styles import Font, Alignment
 import csv
 import glob
+
+from tkinter import *
+from tkinter import filedialog
+import tkinter as tk
+
 from openpyxl import Workbook
+
+
 
 
 class Student:
@@ -262,3 +269,72 @@ class CheckAnswers:
             if question_a.get_question() != question_b.get_question():
                 return False
         return True
+
+
+class GUI:
+
+    def __init__(self):
+        self.window = tk.Tk()
+        self.__file = ""
+        self.window.geometry("1000x500")
+        self.window.configure(bg='black')
+        #self.window.mainloop()   
+
+    def get_file(self):
+        return self.__file
+
+    def open_dialog( self ):
+        filename = filedialog.askopenfilename( title="select a file")
+        self.__file = filename
+        path = tk.Label(text=self.__file)
+        path.pack()
+    
+    def StudentList(self):
+        StudentList(self.__file)
+
+    def config_button(self,button):
+        button.configure(
+            #text="sjdfjksdghfjhgsd!",
+            width=25,
+            height=5,
+            bg="gray",
+            fg="black" 
+        )
+        button.pack()
+    '''
+        def start_process(self):
+        student_list = StudentList(self.__file) # exceli okur
+        print("********************  " + self.__file + "***********************")
+        Reports('zoom_poll_reports', student_list).read_reports() #poll bilgisi ni student list e ekliyor
+        results = Results(student_list.get_students())
+        Attendance(student_list.get_students(), results).add_attendance()
+        answer_keys = AnswerKeys('answer_keys').get_answer_keys()
+        CheckAnswers(student_list.get_students(), results, answer_keys).check()
+        results.save_book()
+        conclusion = tk.Label(text="Process Complated")
+        conclusion.pack()
+    
+    
+    def create_window(self):
+
+        buttonRead = tk.Button(
+            text="Start process!",
+            width=25,
+            height=5,
+            bg="gray",
+            fg="black",
+            command= self.start_process
+        )
+        buttonRead.pack()
+'''
+    def compileWindow(self):
+        self.window.mainloop()
+    
+
+         
+
+
+
+
+
+
