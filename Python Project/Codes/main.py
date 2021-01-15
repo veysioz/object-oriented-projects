@@ -11,4 +11,7 @@ window.configButtonFolder(buttonReports)
 buttonAnswers = Button(text="SELECT ANSWERS KEY FOLDER", command=window.answers)
 window.configButtonFolder(buttonAnswers)
 
+buttonStart = Button(text="START", command=window.startProcess)
+window.configButtonStart(buttonStart)
+
 window.compileWindow()

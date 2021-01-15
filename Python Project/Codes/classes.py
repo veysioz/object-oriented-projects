@@ -279,8 +279,10 @@ class GUI:
         self.window = tk.Tk()
         self.__file = ""
         self.window.geometry("800x525")
-        self.window.configure(bg='black')
+        self.window.configure(bg='SkyBlue3')
         self.window.title("Zoom Attendance and Poll Report")
+        Label(self.window, text='Zoom Attendance and Poll Report', font=('Verdana', 10), bg='SkyBlue3').pack(side=TOP, pady=10)
+        Label(self.window, text='Group 19', font=('Verdana', 8), bg='SkyBlue3').pack(side=BOTTOM,pady=10)
 
     def get_file(self):
         return self.__file
@@ -304,11 +306,33 @@ class GUI:
         pathAnswersFile.pack()
 
     def configButtonXLS(self,button):
-
+        button.configure(
+            width=25,
+            height=2,
+            bg="turquoise1",
+            fg="black",
+            font=('Verdana', 20)
+        )
         button.pack()
 
     def configButtonFolder(self,button):
+        button.configure(
+            width=25,
+            height=2,
+            bg="turquoise3",
+            fg="black",
+            font=('Verdana', 20)
+        )
+        button.pack()
 
+    def configButtonStart(self, button):
+        button.configure(
+            width=25,
+            height=2,
+            bg="cyan3",
+            fg="black",
+            font=('Verdana', 20)
+        )
         button.pack()
 
     def startProcess(self):
@@ -318,6 +342,9 @@ class GUI:
         Attendance(student_list.get_students(), results).add_attendance()
         answer_keys = AnswerKeys(self.__answersFile).get_answer_keys()
         CheckAnswers(student_list.get_students(), results, answer_keys).check()
+        results.save_book()
+        conclusion = tk.Label(text="Process Completed", font=('Verdana', 7), bg='SkyBlue3')
+        conclusion.pack()
 
     def compileWindow(self):
         self.window.mainloop()
