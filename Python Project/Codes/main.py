@@ -1,17 +1,15 @@
 from classes import *
 
-window = GUI()
+student_list = StudentList('CES3063_Fall2020_rptSinifListesi.XLS')
 
-buttonListStudent = Button(text="SELECT STUDENT LIST", command=window.studentList)
-window.configButtonXLS(buttonListStudent)
+Reports('zoom_poll_reports', student_list).read_reports()
 
-buttonReports = Button(text="SELECT REPORTS FOLDER", command=window.reports)
-window.configButtonFolder(buttonReports)
+results = Results(student_list.get_students())
 
-buttonAnswers = Button(text="SELECT ANSWERS KEY FOLDER", command=window.answers)
-window.configButtonFolder(buttonAnswers)
+Attendance(student_list.get_students(), results).add_attendance()
 
-buttonStart = Button(text="START", command=window.startProcess)
-window.configButtonStart(buttonStart)
+answer_keys = AnswerKeys('answer_keys').get_answer_keys()
 
-window.compileWindow()
+CheckAnswers(student_list.get_students(), results, answer_keys).check()
+
+results.save_book()
