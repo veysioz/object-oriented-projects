@@ -1,9 +1,12 @@
 import xlrd
-import re
 from openpyxl.styles import Font, Alignment
 import csv
 import glob
+from tkinter import *
+from tkinter import filedialog
+import tkinter as tk
 from openpyxl import Workbook
+import re
 
 
 class Student:
@@ -296,3 +299,77 @@ class CheckAnswers:
             if question_a.get_question() != question_b.get_question():
                 return False
         return True
+
+
+class GUI:
+    def __init__(self):
+        self.window = tk.Tk()
+        self.__file = ""
+        self.window.geometry("800x525")
+        self.window.configure(bg='SkyBlue3')
+        self.window.title("Zoom Attendance and Poll Report")
+        self.__student_list_file = ""
+        self.__reports_file = ""
+        self.__answers_file = ""
+        Label(self.window, text='Zoom Attendance and Poll Report',
+              font=('Verdana', 10), bg='SkyBlue3').pack(side=TOP, pady=10)
+        Label(self.window, text='Group 19', font=('Verdana', 8), bg='SkyBlue3').pack(side=BOTTOM, pady=10)
+
+    def get_file(self):
+        return self.__file
+
+    def student_list(self):
+        student_list_file = filedialog.askopenfilename(title="select a student list")
+        self.__student_list_file = student_list_file
+
+    def reports(self):
+        reports_file = filedialog.askdirectory(title="select a reports")
+        self.__reports_file = reports_file
+
+    def answers(self):
+        answers_file = filedialog.askdirectory(title="select a answers file")
+        self.__answers_file = answers_file
+
+    def config_button_xls(self, button):
+        button.configure(
+            width=25,
+            height=2,
+            bg="turquoise1",
+            fg="black",
+            font=('Verdana', 20)
+        )
+        button.pack()
+
+    def config_button_folder(self, button):
+        button.configure(
+            width=25,
+            height=2,
+            bg="turquoise3",
+            fg="black",
+            font=('Verdana', 20)
+        )
+        button.pack()
+
+    def config_buttons_start(self, button):
+        button.configure(
+            width=25,
+            height=2,
+            bg="cyan3",
+            fg="black",
+            font=('Verdana', 20)
+        )
+        button.pack()
+
+    def start_process(self):
+        student_list = StudentList(self.__student_list_file)
+        Reports(self.__reports_file, student_list).read_reports()
+        results = Results(student_list.get_students())
+        Attendance(student_list.get_students(), results).add_attendance()
+        answer_keys = AnswerKeys(self.__answers_file).get_answer_keys()
+        CheckAnswers(student_list.get_students(), results, answer_keys).check()
+        results.save_book()
+        conclusion = tk.Label(text="Process Completed", font=('Verdana', 7), bg='SkyBlue3')
+        conclusion.pack()
+
+    def compile_window(self):
+        self.window.mainloop()
