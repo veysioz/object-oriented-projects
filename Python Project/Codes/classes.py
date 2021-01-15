@@ -8,6 +8,9 @@ import tkinter as tk
 from openpyxl import Workbook
 import re
 
+from tkinter import filedialog, messagebox, ttk
+import pandas as pd
+
 
 class Student:
     def __init__(self, no, id_number, name, surname):
@@ -303,17 +306,20 @@ class CheckAnswers:
 
 class GUI:
     def __init__(self):
-        self.window = tk.Tk()
+        self.__window = tk.Tk()
         self.__file = ""
-        self.window.geometry("800x525")
-        self.window.configure(bg='SkyBlue3')
-        self.window.title("Zoom Attendance and Poll Report")
+        self.__window.geometry("1500x725")
+        self.__window.configure(bg='SkyBlue3')
+        self.__window.title("Zoom Attendance and Poll Report")
         self.__student_list_file = ""
         self.__reports_file = ""
         self.__answers_file = ""
-        Label(self.window, text='Zoom Attendance and Poll Report',
+        Label(self.__window, text='Zoom Attendance and Poll Report',
               font=('Verdana', 10), bg='SkyBlue3').pack(side=TOP, pady=10)
-        Label(self.window, text='Group 19', font=('Verdana', 8), bg='SkyBlue3').pack(side=BOTTOM, pady=10)
+        Label(self.__window, text='Group 19', font=('Verdana', 8), bg='SkyBlue3').pack(side=BOTTOM, pady=10)
+        self.tv1 = ""
+        
+       
 
     def get_file(self):
         return self.__file
@@ -372,4 +378,66 @@ class GUI:
         conclusion.pack()
 
     def compile_window(self):
-        self.window.mainloop()
+        self.__window.mainloop()
+
+    def display_result_file(self):
+        root = tk.Tk()
+
+        root.geometry("1700x700")
+        root.pack_propagate(False)
+        root.resizable(0, 0) 
+
+        # Frame for TreeView
+        frame1 = tk.LabelFrame(root, text="Excel Data")
+        frame1.place(height=400, width=800)
+
+        # Frame for open file dialog
+        file_frame = tk.LabelFrame(root, text="Select Result File")
+        file_frame.place(height=100, width=400, rely=0.65, relx=0)
+        # Buttons
+        button1 = tk.Button(file_frame, text="Browse A File", command=lambda: self.File_dialog())
+        button1.place(rely=0.65, relx=0.50)
+
+        ## Treeview Widget
+        self.tv1 = ttk.Treeview(frame1)
+        self.tv1.place(relheight=1, relwidth=1) 
+
+        treescrolly = tk.Scrollbar(frame1, orient="vertical", command=self.tv1.yview) 
+        treescrollx = tk.Scrollbar(frame1, orient="horizontal", command=self.tv1.xview) 
+        self.tv1.configure(xscrollcommand=treescrollx.set, yscrollcommand=treescrolly.set) # assign the scrollbars to the Treeview Widget
+        treescrollx.pack(side="bottom", fill="x")
+        treescrolly.pack(side="right", fill="y") 
+        root.mainloop()
+
+    def File_dialog(self):
+        filename = filedialog.askopenfilename(title="Select A File",filetype=(("xlsx files", "*.xlsx"),("All Files", "*.*")))
+        self.Load_excel_data(filename)
+        return None
+
+    def Load_excel_data(self,filename):
+        
+        file_path = filename
+        try:
+            excel_filename = r"{}".format(file_path)
+            if excel_filename[-4:] == ".csv":
+                df = pd.read_csv(excel_filename)
+            else:
+                df = pd.read_excel(excel_filename)
+
+        except ValueError:
+            tk.messagebox.showerror("Information", "The file you have chosen is invalid")
+            return None
+        except FileNotFoundError:
+            tk.messagebox.showerror("Information", f"No such file as {file_path}")
+            return None
+
+        self.tv1["column"] = list(df.columns)
+        self.tv1["show"] = "headings"
+        for column in self.tv1["columns"]:
+            self.tv1.heading(column, text=column)
+
+        data_frame_rows = df.to_numpy().tolist() 
+        for row in data_frame_rows:
+            self.tv1.insert("", "end", values=row) 
+        return None
+  
