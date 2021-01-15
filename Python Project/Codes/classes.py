@@ -10,7 +10,6 @@ import tkinter as tk
 
 from openpyxl import Workbook
 import matplotlib.pyplot as plt
-import time
 
 
 
