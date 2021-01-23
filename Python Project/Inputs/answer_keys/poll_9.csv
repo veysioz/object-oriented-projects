@@ -1,0 +1,11 @@
+﻿Poll_9
+A use case is a collection of success and failure scenarios describing an actor using a system to support a goal,True
+The goal in requirement analysis is ...,understand customers problem,
+In UP Use cases are created in ... stage of software development,Analysis,
+Use cases never initiate actions actors do and use case interaction produces something of value to an actor,True,
+Which one of the following is FALSE?,Use case is an object oriented artifact,
+We should avoid implementation specific language in use cases and in requirement analysis such as IF-THEN-ELSE or GUI elements,True,
+Requirement Analysis is  ....  activity in software development,First,
+Ranking of requirements is done before ...,each iteration,
+Which one of the following is not a non-functional requirement category?,User Types,
+Which of the following is NOT an advantage of use cases?,Systematic and intuitive way to capture non-functional requirements,
