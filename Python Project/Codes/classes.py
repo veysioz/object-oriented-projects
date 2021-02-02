@@ -311,7 +311,15 @@ class GeneralResults:
         self.__results = results
         self.__number_of_pages = self.get_number_of_pages()
 
-   
+    def get_number_of_pages(self):
+        number_of_pages = 0
+        for sheet in self.__results.get_book():
+            if "Poll" in sheet.title:
+                number_of_pages += 1
+        return number_of_pages
+
+    def print_result(self):
+        pass
 
 
 class GUI:
