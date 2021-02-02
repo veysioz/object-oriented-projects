@@ -67,7 +67,7 @@ class StudentList:
                 max_name = s
             counter = 0
             for i in range(min_name.__len__() - 2):
-                if max_name.__contains__(min_name[i] + min_name[i+1] + min_name[i+2]):
+                if max_name.__contains__(min_name[i] + min_name[i + 1] + min_name[i + 2]):
                     counter += 1
             if counter / max_length > similarity:
                 similarity = counter / max_length
@@ -176,7 +176,7 @@ class Reports:
                     i = 4
                     while i < line.__len__():
                         if line[i].replace(" ", "") != "":
-                            questions.append(Question(line[i], line[i+1]))
+                            questions.append(Question(line[i], line[i + 1]))
                         i += 2
                     poll = Poll(questions)
                     poll.set_poll_date(line[3])
@@ -281,11 +281,12 @@ class CheckAnswers:
                         for true_answer, student_answer in zip(answer_key.get_questions(), poll.get_questions()):
                             chr_number += 1
                             true_number += int(true_answer.get_answer() == student_answer.get_answer())
-                            results.add_cell(book[answer_name], chr(chr_number), student.get_no()+1,
+                            results.add_cell(book[answer_name], chr(chr_number), student.get_no() + 1,
                                              int(true_answer.get_answer() == student_answer.get_answer()))
                         success_rate = float(true_number) / len(answer_key.get_questions())
-                        results.add_cell(book[answer_name], 'O', student.get_no()+1, success_rate)
-                        results.add_cell(book[answer_name], 'P', student.get_no() + 1, str(int(success_rate*100))+'%')
+                        results.add_cell(book[answer_name], 'O', student.get_no() + 1, success_rate)
+                        results.add_cell(book[answer_name], 'P', student.get_no() + 1,
+                                         str(int(success_rate * 100)) + '%')
 
     def add_sheet(self, poll_name, questions_number):
         self.__results.new_sheet(poll_name)
@@ -293,7 +294,7 @@ class CheckAnswers:
         for i in range(questions_number):
             chr_number += 1
             self.__results.column_title(self.__results.get_book()[poll_name], chr(chr_number),
-                                        'Q'+str(chr_number - 68), 5)
+                                        'Q' + str(chr_number - 68), 5)
 
     def poll_control(self, questions_a, questions_b):
         if len(questions_a) != len(questions_b):
@@ -302,6 +303,15 @@ class CheckAnswers:
             if question_a.get_question() != question_b.get_question():
                 return False
         return True
+
+
+class GeneralResults:
+    def __init__(self, student_list, results):
+        self.__student_list = student_list
+        self.__results = results
+        self.__number_of_pages = self.get_number_of_pages()
+
+   
 
 
 class GUI:
@@ -318,8 +328,6 @@ class GUI:
               font=('Verdana', 10), bg='SkyBlue3').pack(side=TOP, pady=10)
         Label(self.__window, text='Group 19', font=('Verdana', 8), bg='SkyBlue3').pack(side=BOTTOM, pady=10)
         self.tv1 = ""
-        
-       
 
     def get_file(self):
         return self.__file
@@ -385,7 +393,7 @@ class GUI:
 
         root.geometry("1700x700")
         root.pack_propagate(False)
-        root.resizable(0, 0) 
+        root.resizable(0, 0)
 
         # Frame for TreeView
         frame1 = tk.LabelFrame(root, text="Excel Data")
@@ -400,22 +408,24 @@ class GUI:
 
         ## Treeview Widget
         self.tv1 = ttk.Treeview(frame1)
-        self.tv1.place(relheight=1, relwidth=1) 
+        self.tv1.place(relheight=1, relwidth=1)
 
-        treescrolly = tk.Scrollbar(frame1, orient="vertical", command=self.tv1.yview) 
-        treescrollx = tk.Scrollbar(frame1, orient="horizontal", command=self.tv1.xview) 
-        self.tv1.configure(xscrollcommand=treescrollx.set, yscrollcommand=treescrolly.set) # assign the scrollbars to the Treeview Widget
+        treescrolly = tk.Scrollbar(frame1, orient="vertical", command=self.tv1.yview)
+        treescrollx = tk.Scrollbar(frame1, orient="horizontal", command=self.tv1.xview)
+        self.tv1.configure(xscrollcommand=treescrollx.set,
+                           yscrollcommand=treescrolly.set)  # assign the scrollbars to the Treeview Widget
         treescrollx.pack(side="bottom", fill="x")
-        treescrolly.pack(side="right", fill="y") 
+        treescrolly.pack(side="right", fill="y")
         root.mainloop()
 
     def File_dialog(self):
-        filename = filedialog.askopenfilename(title="Select A File",filetype=(("xlsx files", "*.xlsx"),("All Files", "*.*")))
+        filename = filedialog.askopenfilename(title="Select A File",
+                                              filetype=(("xlsx files", "*.xlsx"), ("All Files", "*.*")))
         self.Load_excel_data(filename)
         return None
 
-    def Load_excel_data(self,filename):
-        
+    def Load_excel_data(self, filename):
+
         file_path = filename
         try:
             excel_filename = r"{}".format(file_path)
@@ -436,8 +446,7 @@ class GUI:
         for column in self.tv1["columns"]:
             self.tv1.heading(column, text=column)
 
-        data_frame_rows = df.to_numpy().tolist() 
+        data_frame_rows = df.to_numpy().tolist()
         for row in data_frame_rows:
-            self.tv1.insert("", "end", values=row) 
+            self.tv1.insert("", "end", values=row)
         return None
-  
