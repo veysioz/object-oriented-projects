@@ -319,7 +319,24 @@ class GeneralResults:
         return number_of_pages
 
     def print_result(self):
-        pass
+        self.__results.new_sheet("general_stats")
+        self.__results.column_title(self.__results.get_book()["general_stats"], "E", "General Success Rate", 20)
+        self.__results.column_title(self.__results.get_book()["general_stats"], "F", "General Success Percentage", 25)
+        total = 0.0
+        i = 2
+        while i < len(self.__student_list.get_students()) + 2:
+            for sheet in self.__results.get_book():
+                if "Poll" in sheet.title:
+                    cell = sheet.cell(i, 15)
+                    if cell.value is None:
+                        cell.value = 0.0
+                    total = total + cell.value
+                self.__results.add_cell(self.__results.get_book()['general_stats'], "E", i,
+                                        total / self.__number_of_pages)
+                self.__results.add_cell(self.__results.get_book()['general_stats'], "F", i,
+                                        str(int((total / self.__number_of_pages) * 100)) + ' %')
+            total = 0.0
+            i += 1
 
 
 class GUI:
@@ -389,6 +406,7 @@ class GUI:
         Attendance(student_list.get_students(), results).add_attendance()
         answer_keys = AnswerKeys(self.__answers_file).get_answer_keys()
         CheckAnswers(student_list.get_students(), results, answer_keys).check()
+        GeneralResults(student_list,results).print_result()
         results.save_book()
         conclusion = tk.Label(text="Process Completed", font=('Verdana', 7), bg='SkyBlue3')
         conclusion.pack()
