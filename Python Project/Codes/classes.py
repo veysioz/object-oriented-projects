@@ -329,7 +329,8 @@ class GeneralResults:
                 if "Poll" in sheet.title:
                     cell = sheet.cell(i, 15)
                     if cell.value is None:
-                        cell.value = 0.0
+                        cell.value=0
+                        cell.alignment = Alignment(horizontal='left')
                     total = total + cell.value
                 self.__results.add_cell(self.__results.get_book()['general_stats'], "E", i,
                                         total / self.__number_of_pages)
