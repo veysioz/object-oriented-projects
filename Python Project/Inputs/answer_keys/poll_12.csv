@@ -10,4 +10,3 @@ There are two types of relations between classes in object oriented programming.
 It is possible to call a private method of the superclass in the public method of the inherited class,False,
 It is possible to call a protected method of the superclass in the protected method of the inherited class,True,
 It is possible to call a protected method of the superclass in the private method of the inherited class,True,
- 

@@ -9,4 +9,3 @@ What is multiplicity for an association?,The multiplicity at the target class en
 Which one is NOT true for UML?,Usually created in testing activities,
 A class is divided into which of these compartments ?,All of the above,
 If you have following associations with given cardinalities between three classes which of the following will be true? Flat-1---*-LeasingContract-*---*-Tenant,One tenant can rent the same flat multiple times with different leasing contracts.,
- 
