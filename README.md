@@ -14,3 +14,11 @@ __*[Mikail Torun](https://github.com/mikailTorun) - 150116021*__
 __*[Muhammet Yasin Tufan](https://github.com/myasintufan) - 150116013*__
 
 __*[Veysi Öz](https://github.com/veysioz) - 150116005*__
+
+
+
+### Instructors
+
+__*[Murat Can Ganiz](https://github.com/mcganiz)*__
+
+__*[Lokman Altın](https://github.com/lokmanaltin)*__
