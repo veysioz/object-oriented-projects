@@ -16,9 +16,6 @@ __*[Muhammet Yasin Tufan](https://github.com/myasintufan) - 150116013*__
 __*[Veysi Öz](https://github.com/veysioz) - 150116005*__
 
 
-
-
-
 ### Instructors
 
 __*[Murat Can Ganiz](https://github.com/mcganiz)*__
