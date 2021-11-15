@@ -1,4 +1,4 @@
-# MUCSE-Object-Oriented-Software-Design-2020
+# CSE3063-Object-Oriented-Software-Design-2020
 ### GROUP 19
 
 __*[Abbas Göktuğ Yılmaz](https://github.com/AGoktugylmz) - 150115061*__
